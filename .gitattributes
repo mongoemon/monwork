@@ -1,0 +1,8 @@
+# Treat binary files as binary — prevent CRLF corruption
+*.xlsx binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
