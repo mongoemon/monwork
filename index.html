@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noppon Mongkonnimit — Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a id="nav-name" href="#home" class="nav-brand"></a>
+            <ul>
+                <li><a href="#home" data-i18n="nav_home">Home</a></li>
+                <li><a href="#about" data-i18n="nav_about">About</a></li>
+                <li><a href="#projects" data-i18n="nav_projects">Projects</a></li>
+                <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+                <li><a href="#join" data-i18n="nav_join">Join</a></li>
+            </ul>
+            <div class="lang-switch">
+                <button class="lang-btn" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="th">TH</button>
+            </div>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">Dark</button>
+        </nav>
+    </header>
+
+    <!-- Home: hero + recent projects + contact -->
+    <section id="home" class="active">
+        <div class="container">
+            <div class="home-hero">
+                <img id="home-photo" src="" alt="Profile Photo">
+                <h1 id="home-name">Loading...</h1>
+                <h2 id="home-title"></h2>
+                <p id="home-intro"></p>
+                <a href="#about" class="read-more-btn" data-i18n="read_more">Read More</a>
+            </div>
+            <div class="home-recent">
+                <div class="home-recent-header">
+                    <h3 data-i18n="recent_projects">Recent Projects</h3>
+                    <a href="#projects" class="view-all-link" data-i18n="view_all">View all →</a>
+                </div>
+                <div id="recent-projects-list"></div>
+            </div>
+            <div class="home-contact" id="contact">
+                <div class="home-contact-intro">
+                    <h3 data-i18n="contact_heading">Get in Touch</h3>
+                    <p data-i18n="contact_intro">Feel free to reach out — whether for inquiries, a chat, or job opportunities.</p>
+                </div>
+                <div class="home-contact-card">
+                    <div data-fs-success class="cf-success" data-i18n="contact_success">Message sent — I'll get back to you soon!</div>
+                    <div data-fs-error class="cf-form-error"></div>
+                    <form id="contact-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cf-name">
+                                    <span data-i18n="contact_name">Name</span>
+                                    <span class="form-required">*</span>
+                                </label>
+                                <input type="text" id="cf-name" name="name" required
+                                    placeholder="Your name" autocomplete="name"
+                                    data-fs-field data-i18n-placeholder="contact_name_ph">
+                                <span data-fs-error="name" class="field-error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="cf-email">
+                                    <span data-i18n="contact_email">Email</span>
+                                    <span class="form-required">*</span>
+                                </label>
+                                <input type="email" id="cf-email" name="email" required
+                                    placeholder="your@email.com" autocomplete="email"
+                                    data-fs-field data-i18n-placeholder="contact_email_ph">
+                                <span data-fs-error="email" class="field-error"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cf-subject">
+                                <span data-i18n="contact_subject">Subject</span>
+                            </label>
+                            <input type="text" id="cf-subject" name="subject"
+                                placeholder="What's this about?"
+                                data-i18n-placeholder="contact_subject_ph">
+                        </div>
+                        <div class="form-group">
+                            <label for="cf-message">
+                                <span data-i18n="contact_message">Message</span>
+                                <span class="form-required">*</span>
+                            </label>
+                            <textarea id="cf-message" name="message" rows="5" required
+                                placeholder="Your message…"
+                                data-fs-field data-i18n-placeholder="contact_message_ph"></textarea>
+                            <span data-fs-error="message" class="field-error"></span>
+                        </div>
+                        <button type="submit" data-fs-submit-btn data-i18n="contact_submit">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About: full profile -->
+    <section id="about">
+        <div class="container">
+            <h2 data-i18n="section_about">About Me</h2>
+            <p id="about-bio"></p>
+            <p id="about-location"></p>
+
+            <h3 class="section-sub" data-i18n="section_experience">Experience</h3>
+            <div id="experience-list" class="timeline"></div>
+
+            <h3 class="section-sub" data-i18n="section_education">Education</h3>
+            <div id="education-list" class="edu-list"></div>
+
+            <div class="about-bottom-row">
+                <div class="about-col">
+                    <h3 class="section-sub" data-i18n="section_certifications">Certifications</h3>
+                    <ul id="certifications-list" class="cert-list"></ul>
+                </div>
+                <div class="about-col">
+                    <h3 class="section-sub" data-i18n="section_awards">Awards</h3>
+                    <ul id="awards-list" class="award-list"></ul>
+                </div>
+            </div>
+
+            <h3 class="section-sub" data-i18n="section_skills">Skills</h3>
+            <div id="skills-list"></div>
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects">
+        <div class="container">
+            <h2 data-i18n="section_projects">Projects</h2>
+            <div class="project-tabs">
+                <button class="project-tab tab-active" data-category="all">
+                    <span data-i18n="tab_all">All</span><span class="tab-count"></span>
+                </button>
+                <button class="project-tab" data-category="Software">
+                    <span data-i18n="tab_software">Software</span><span class="tab-count"></span>
+                </button>
+                <button class="project-tab" data-category="Game">
+                    <span data-i18n="tab_game">Game</span><span class="tab-count"></span>
+                </button>
+                <button class="project-tab" data-category="etc.">
+                    <span data-i18n="tab_etc">etc.</span><span class="tab-count"></span>
+                </button>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="project-search"
+                    placeholder="Search by name, tools, or description…"
+                    data-i18n-placeholder="search_ph" autocomplete="off">
+                <span id="search-count"></span>
+            </div>
+            <div id="projects-list"></div>
+            <div id="projects-pagination" class="pagination"></div>
+        </div>
+    </section>
+
+    <!-- Join QA Team -->
+    <section id="join">
+        <div class="container">
+            <h2 data-i18n="join_title">Join QA Team</h2>
+            <div class="join-intro">
+                <p data-i18n="join_intro_1"></p>
+                <p data-i18n="join_intro_2"></p>
+            </div>
+            <div class="join-privacy">
+                <span class="join-privacy-icon">&#128274;</span>
+                <span data-i18n="join_privacy"></span>
+            </div>
+            <div class="join-card">
+                <div data-fs-success class="cf-success" data-i18n="join_success">Application received!</div>
+                <div data-fs-error class="cf-form-error"></div>
+                <form id="join-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="jf-name">
+                                <span data-i18n="join_name">First Name</span>
+                                <span class="form-required">*</span>
+                            </label>
+                            <input type="text" id="jf-name" name="name" required
+                                autocomplete="given-name"
+                                data-fs-field data-i18n-placeholder="join_name_ph">
+                            <span data-fs-error="name" class="field-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="jf-nickname">
+                                <span data-i18n="join_nickname">Nickname</span>
+                            </label>
+                            <input type="text" id="jf-nickname" name="nickname"
+                                data-i18n-placeholder="join_nickname_ph">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="jf-dob">
+                                <span data-i18n="join_dob">Date of Birth</span>
+                                <span class="form-required">*</span>
+                            </label>
+                            <input type="date" id="jf-dob" name="date_of_birth" required
+                                data-fs-field>
+                            <span data-fs-error="date_of_birth" class="field-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="jf-phone">
+                                <span data-i18n="join_phone">Phone Number</span>
+                                <span class="form-required">*</span>
+                            </label>
+                            <input type="tel" id="jf-phone" name="phone" required
+                                autocomplete="tel"
+                                data-fs-field data-i18n-placeholder="join_phone_ph">
+                            <span data-fs-error="phone" class="field-error"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="jf-links">
+                            <span data-i18n="join_links">Related Links</span>
+                        </label>
+                        <textarea id="jf-links" name="links" rows="3"
+                            data-i18n-placeholder="join_links_ph"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <span data-i18n="join_interest">Interest</span>
+                            <span class="form-required">*</span>
+                        </label>
+                        <div class="join-interest-group">
+                            <label class="join-interest-option">
+                                <input type="radio" name="interest" value="learn" required>
+                                <span data-i18n="join_interest_learn">Learning only</span>
+                            </label>
+                            <label class="join-interest-option">
+                                <input type="radio" name="interest" value="work">
+                                <span data-i18n="join_interest_work">Open to paid projects too</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" data-fs-submit-btn data-i18n="join_submit">Submit Application</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="config.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+        formspree('initForm', { formElement: '#contact-form', formId: 'xykloarz' });
+        formspree('initForm', { formElement: '#join-form', formId: 'xlgavrqr' });
+    </script>
+    <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
+</body>
+</html>
