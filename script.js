@@ -739,6 +739,8 @@ function createGallery(items, altPrefix) {
     let current = 0;
     const wrapper = document.createElement('div');
     wrapper.className = 'gallery';
+    const row = document.createElement('div');
+    row.className = 'gallery-row';
     const frame = document.createElement('div');
     frame.className = 'gallery-frame';
     const prevBtn = document.createElement('button');
@@ -751,7 +753,8 @@ function createGallery(items, altPrefix) {
     nextBtn.className = 'gallery-arrow gallery-arrow--next';
     nextBtn.setAttribute('aria-label', t('gallery_next'));
     nextBtn.innerHTML = '&#8594;';
-    frame.append(prevBtn, mediaSlot, nextBtn);
+    frame.append(mediaSlot);
+    row.append(prevBtn, frame, nextBtn);
 
     const dotsEl = document.createElement('div');
     dotsEl.className = 'gallery-dots';
@@ -764,7 +767,7 @@ function createGallery(items, altPrefix) {
         return d;
     });
     if (dots.length > 1) dotsEl.append(...dots);
-    wrapper.append(frame, dotsEl);
+    wrapper.append(row, dotsEl);
 
     function renderMedia(item) {
         mediaSlot.innerHTML = '';
