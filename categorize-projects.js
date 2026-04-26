@@ -1,3 +1,10 @@
+/**
+ * categorize-projects.js
+ * กำหนด Project_Category ให้โปรเจคทั้งหมด โดยเขียนเซลล์ตรงๆ
+ * (ป้องกัน line break ใน cell เดิมหาย)
+ *
+ * วิธีใช้: node categorize-projects.js
+ */
 const XLSX = require('./node_modules/xlsx');
 const path = require('path');
 
@@ -27,21 +34,59 @@ const categories = {
 
 const lookup = {};
 Object.entries(categories).forEach(([cat, names]) =>
-    names.forEach(n => lookup[n] = cat)
+    names.forEach(n => (lookup[n] = cat))
 );
+
+// ── Safe cell-level writer ────────────────────────────────
+
+function writeCells(ws, rowIndex, fields) {
+    const range = XLSX.utils.decode_range(ws['!ref']);
+
+    const headers = {};
+    for (let C = range.s.c; C <= range.e.c; C++) {
+        const cell = ws[XLSX.utils.encode_cell({ r: 0, c: C })];
+        if (cell) headers[cell.v] = C;
+    }
+
+    Object.entries(fields).forEach(([col, value]) => {
+        if (headers[col] === undefined) {
+            range.e.c++;
+            headers[col] = range.e.c;
+            ws[XLSX.utils.encode_cell({ r: 0, c: range.e.c })] = { v: col, t: 's' };
+        }
+        ws[XLSX.utils.encode_cell({ r: rowIndex, c: headers[col] })] = { v: value, t: 's' };
+    });
+
+    ws['!ref'] = XLSX.utils.encode_range(range);
+}
+
+// ── Main ──────────────────────────────────────────────────
 
 const filePath = path.join(__dirname, 'data.xlsx');
 const wb = XLSX.readFile(filePath);
-const rows = XLSX.utils.sheet_to_json(wb.Sheets['Project'], { defval: '', raw: false });
+const ws = wb.Sheets['Project'];
+const range = XLSX.utils.decode_range(ws['!ref']);
+
+let nameCol = -1;
+for (let C = range.s.c; C <= range.e.c; C++) {
+    const cell = ws[XLSX.utils.encode_cell({ r: 0, c: C })];
+    if (cell && cell.v === 'Project name') { nameCol = C; break; }
+}
+if (nameCol === -1) { console.error('Column "Project name" not found'); process.exit(1); }
 
 const counts = { Software: 0, Game: 0, 'etc.': 0, unmatched: 0 };
-rows.forEach(r => {
-    const cat = lookup[r['Project name']] || 'etc.';
-    r['Project_Category'] = cat;
-    if (lookup[r['Project name']]) counts[cat]++;
-    else { counts.unmatched++; console.log('  unmatched:', r['Project name']); }
-});
 
-wb.Sheets['Project'] = XLSX.utils.json_to_sheet(rows);
+for (let R = range.s.r + 1; R <= range.e.r; R++) {
+    const nameCell = ws[XLSX.utils.encode_cell({ r: R, c: nameCol })];
+    if (!nameCell) continue;
+    const name = String(nameCell.v).trim();
+    const cat = lookup[name] || 'etc.';
+
+    writeCells(ws, R, { Project_Category: cat });
+
+    if (lookup[name]) counts[cat]++;
+    else { counts.unmatched++; console.log('  unmatched:', name); }
+}
+
 XLSX.writeFile(wb, filePath);
-console.log('Done.', counts);
+console.log('Done — existing cells untouched.', counts);
