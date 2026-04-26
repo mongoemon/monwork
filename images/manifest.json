@@ -178,6 +178,11 @@
     "images.png",
     "pick-network.png"
   ],
+  "td": [
+    "001_.jpg",
+    "002.png",
+    "logo.jpg"
+  ],
   "TLSS": [
     "logo.jpeg",
     "screen480x480.jpeg",
@@ -194,8 +199,20 @@
   "ultraman": [
     "04414_006.jpg",
     "71136_156848433816_4583019_n.jpg",
-    "1289303387.jpg",
-    "yuth_l.jpg"
+    "1289303387.jpg"
+  ],
+  "wicked": [
+    "001.jpg",
+    "002.jpg",
+    "003.jpg",
+    "004.jpg",
+    "005.jpg",
+    "006.jpg",
+    "007.jpg",
+    "008.jpg",
+    "009.jpg",
+    "010.jpg",
+    "logo.jpg"
   ],
   "wickedtyping": [
     "001.png",
@@ -216,11 +233,12 @@
     "gfs_177856_2_8.jpg",
     "gfs_177856_2_9.jpg",
     "gfs_177856_2_10.jpg",
-    "gfs_177856_2_12.jpg"
+    "gfs_177856_2_12.jpg",
+    "logo.png"
   ],
   "yuth": [
-    "yuth0001.jpg",
-    "yuth0002.jpg",
+    "000.jpg",
+    "logo.jpg",
     "yuth0003.jpg",
     "yuth0004.jpg",
     "yuth0005.jpg",

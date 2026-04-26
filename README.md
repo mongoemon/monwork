@@ -81,13 +81,13 @@ const siteConfig = {
 
 ```bash
 # Python
-python -m http.server 8000
+python -m http.server 8080
 
 # Node.js (ถ้ามี npx)
 npx serve .
 ```
 
-แล้วเปิด `http://localhost:8000`
+แล้วเปิด `http://localhost:8080`
 
 ## อัพเดทข้อมูล
 
