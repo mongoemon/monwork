@@ -793,8 +793,8 @@ h2 {
     cursor: not-allowed;
 }
 
-.gallery-arrow[aria-label="Previous"] { left: 8px; }
-.gallery-arrow[aria-label="Next"]     { right: 8px; }
+.gallery-arrow--prev { left: 8px; }
+.gallery-arrow--next { right: 8px; }
 
 .gallery-dots {
     display: flex;

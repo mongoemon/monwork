@@ -742,13 +742,13 @@ function createGallery(items, altPrefix) {
     const frame = document.createElement('div');
     frame.className = 'gallery-frame';
     const prevBtn = document.createElement('button');
-    prevBtn.className = 'gallery-arrow';
+    prevBtn.className = 'gallery-arrow gallery-arrow--prev';
     prevBtn.setAttribute('aria-label', t('gallery_prev'));
     prevBtn.innerHTML = '&#8592;';
     const mediaSlot = document.createElement('div');
     mediaSlot.className = 'gallery-media';
     const nextBtn = document.createElement('button');
-    nextBtn.className = 'gallery-arrow';
+    nextBtn.className = 'gallery-arrow gallery-arrow--next';
     nextBtn.setAttribute('aria-label', t('gallery_next'));
     nextBtn.innerHTML = '&#8594;';
     frame.append(prevBtn, mediaSlot, nextBtn);
