@@ -21,7 +21,7 @@ portfolio4/
 └── categorize-projects.js  # กำหนด Project_Category ให้โปรเจคทั้งหมด
 ```
 
-## config.js — จัดการ Pages
+## config.js — จัดการ Pages และการตั้งค่า
 
 ไฟล์หลักสำหรับควบคุมว่าจะเปิด/ปิด section ไหน และลำดับที่แสดงใน nav bar
 
@@ -32,7 +32,11 @@ const siteConfig = {
         projects: true,
         join:     true,
         contact:  true,
-    }
+    },
+
+    // จำนวนเดือนที่ไม่มีการ push ก่อนจะแสดงข้อความแจ้งเตือนท้ายหน้าแรก
+    // ตั้งเป็น 0 เพื่อปิดการแจ้งเตือน
+    staleWarningMonths: 6,
 };
 ```
 
@@ -49,7 +53,7 @@ const siteConfig = {
 | Sheet | คอลัมน์หลัก |
 |---|---|
 | Profile | Name, Title, Intro, Bio, Location, Photo_URL (รองรับ `_TH` suffix) |
-| Experience | Company, Role, Duration, Description |
+| Experience | Company, Role, Period, Description (รองรับ `_TH` suffix สำหรับ Role, Company, Description) |
 | Education | School, Degree, Year |
 | Certifications | Name, Issuer, Year |
 | Awards | Name, Description, Year |
@@ -60,7 +64,7 @@ const siteConfig = {
 
 - **SPA navigation** — สลับ section ด้วย hash routing ไม่โหลดหน้าใหม่
 - **Dark mode** — toggle ปุ่ม Dark/Light ในนาฟ ตรวจ system preference อัตโนมัติ บันทึกใน `localStorage`
-- **Bilingual (EN/TH)** — ตรวจ `navigator.language` อัตโนมัติ สลับด้วยปุ่ม EN/TH บันทึกใน `localStorage`
+- **Bilingual (EN/TH)** — ตรวจ `navigator.language` อัตโนมัติ สลับด้วยปุ่ม EN/TH บันทึกใน `localStorage` รองรับ Experience, Skills, Tools, Projects, Profile
 - **Page config** — เปิด/ปิด section และจัดลำดับ nav ได้จาก `config.js` ไฟล์เดียว
 - **Join QA Team** — หน้าสมัครร่วมทีม มี form เก็บชื่อ, ชื่อเล่น, วันเกิด, เบอร์โทร, ลิงค์, และความสนใจ
 - **Project categories** — แบ่งเป็น Software / Game / etc. มี tab filter และแสดงจำนวน
@@ -70,6 +74,7 @@ const siteConfig = {
 - **Contact form** — ใช้ Formspree (`@formspree/ajax`) ส่งอีเมลโดยไม่ต้องมี backend
 - **Pagination** — Projects แสดง 6 รายการต่อหน้า
 - **Search** — ค้นหาได้จากชื่อ, tools, overview
+- **Last updated** — แสดงวันที่ push ล่าสุดจาก GitHub ท้ายหน้าแรก พร้อมข้อความแจ้งเตือนถ้าไม่มีการอัพเดทเกินกำหนด (ตั้งค่าได้ใน `config.js`)
 
 ## Line break ใน Excel
 

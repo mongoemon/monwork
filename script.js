@@ -35,11 +35,6 @@ function applyPageConfig() {
         if (recent) recent.style.display = 'none';
     }
 
-    // Hide contact form block in home if contact is off
-    if (pages.contact === false) {
-        const contactBlock = document.querySelector('.home-contact');
-        if (contactBlock) contactBlock.style.display = 'none';
-    }
 }
 
 // ── Navigation (single-section view) ─────────────────────
@@ -98,6 +93,8 @@ let imageManifest = {};
 let currentLang = 'en';
 let currentCategory = 'all';
 let _profileData = null;
+let _experienceData = null;
+let _lastPushedDate = null;
 let _skillsData = null;
 let _toolsData = null;
 
@@ -178,6 +175,8 @@ const i18n = {
         tool_cat_monitoring: 'Monitoring',
         tool_cat_collaboration: 'Collaboration',
         tool_cat_device: 'Device / Platform',
+        last_updated: 'Last updated',
+        last_updated_stale: 'This portfolio has not been updated in over 6 months. For the most current information, please contact the owner directly.',
     },
     th: {
         nav_home: 'หน้าแรก',
@@ -253,6 +252,8 @@ const i18n = {
         tool_cat_monitoring: 'การตรวจสอบระบบ',
         tool_cat_collaboration: 'การทำงานร่วมกัน',
         tool_cat_device: 'อุปกรณ์ / แพลตฟอร์ม',
+        last_updated: 'อัพเดทล่าสุด',
+        last_updated_stale: 'Portfolio นี้ไม่มีการเปลี่ยนแปลงมานานกว่า 6 เดือนแล้ว หากต้องการข้อมูลล่าสุด กรุณาติดต่อเจ้าของโดยตรงอีกครั้ง',
     }
 };
 
@@ -296,6 +297,8 @@ function applyLang(lang) {
     });
 
     if (_profileData) renderProfile(_profileData);
+    if (_experienceData) renderExperience(_experienceData);
+    if (_lastPushedDate) renderLastUpdated(_lastPushedDate);
     if (_skillsData) renderSkills(_skillsData);
     if (_toolsData) renderTools(_toolsData);
     if (allProjects.length > 0) { renderRecentProjects(); renderProjects(); }
@@ -400,9 +403,38 @@ function renderProfile(profile) {
     document.getElementById('about-location').textContent = loc ? `📍 ${loc}` : '';
 }
 
+// ── Last Updated (GitHub) ─────────────────────────────────
+
+function renderLastUpdated(pushed) {
+    _lastPushedDate = pushed;
+    const el = document.getElementById('home-last-updated');
+    if (!el) return;
+
+    const locale = currentLang === 'th' ? 'th-TH' : 'en-GB';
+    const dateStr = pushed.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const staleMonths = siteConfig?.staleWarningMonths ?? 6;
+    const isStale = staleMonths > 0 && (Date.now() - pushed.getTime()) > staleMonths * 30 * 24 * 60 * 60 * 1000;
+
+    el.innerHTML = isStale
+        ? `<p class="last-updated-date">${t('last_updated')}: ${dateStr}</p>
+           <p class="last-updated-stale">${t('last_updated_stale')}</p>`
+        : `<p class="last-updated-date">${t('last_updated')}: ${dateStr}</p>`;
+}
+
+async function loadLastUpdated() {
+    try {
+        const res = await fetch('https://api.github.com/repos/mongoemon/monwork');
+        if (!res.ok) return;
+        const json = await res.json();
+        renderLastUpdated(new Date(json.pushed_at));
+    } catch (e) { /* silently fail */ }
+}
+
 // ── Experience ────────────────────────────────────────────
 
 function renderExperience(data) {
+    _experienceData = data;
     const list = document.getElementById('experience-list');
     if (!list) return;
     list.innerHTML = '';
@@ -413,11 +445,11 @@ function renderExperience(data) {
             <div class="timeline-dot"></div>
             <div class="timeline-body">
                 <div class="timeline-header">
-                    <span class="timeline-role">${escapeHtml(item.Role || '')}</span>
+                    <span class="timeline-role">${escapeHtml(pickLang(item, 'Role') || '')}</span>
                     <span class="timeline-period">${escapeHtml(item.Period || '')}</span>
                 </div>
-                <div class="timeline-company">${escapeHtml(item.Company || '')}</div>
-                <p class="timeline-desc">${escapeHtml(item.Description || '')}</p>
+                <div class="timeline-company">${escapeHtml(pickLang(item, 'Company') || '')}</div>
+                <p class="timeline-desc">${escapeHtml(pickLang(item, 'Description') || '')}</p>
             </div>
         `;
         list.appendChild(div);
@@ -936,4 +968,4 @@ function hideLoadingOverlay() {
     overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
 }
 
-document.addEventListener('DOMContentLoaded', () => { initTheme(); initLang(); initNav(); loadAll().finally(hideLoadingOverlay); });
+document.addEventListener('DOMContentLoaded', () => { initTheme(); initLang(); initNav(); loadAll().finally(hideLoadingOverlay); loadLastUpdated(); });

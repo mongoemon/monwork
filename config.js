@@ -11,6 +11,11 @@ const siteConfig = {
         projects: true,
         join:     true,
         contact:  false,
- 
-    }
+    },
+
+    /*
+     * Number of months without a GitHub push before the stale warning appears
+     * on the home page. Set to 0 to disable the warning entirely.
+     */
+    staleWarningMonths: 6,
 };
