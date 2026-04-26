@@ -634,12 +634,12 @@ function renderProjects() {
             ${overview ? `
             <div class="project-detail">
                 <p class="detail-label">${t('label_overview')}</p>
-                <p class="overview">${escapeHtml(overview)}</p>
+                <p class="overview">${escapeHtml(normalizeLines(overview))}</p>
             </div>` : ''}
             ${roles ? `
             <div class="project-detail">
                 <p class="detail-label">${t('label_roles')}</p>
-                <p class="roles">${escapeHtml(roles)}</p>
+                <p class="roles">${escapeHtml(normalizeLines(roles))}</p>
             </div>` : ''}
             ${tools ? `
             <div class="project-detail">
@@ -959,6 +959,10 @@ function escapeHtml(str) {
     return String(str)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;')
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function normalizeLines(str) {
+    return String(str).replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n{2,}/g, '\n').trim();
 }
 
 function hideLoadingOverlay() {
