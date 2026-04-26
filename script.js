@@ -99,6 +99,7 @@ let currentLang = 'en';
 let currentCategory = 'all';
 let _profileData = null;
 let _skillsData = null;
+let _toolsData = null;
 
 // ── i18n ──────────────────────────────────────────────────
 
@@ -166,6 +167,17 @@ const i18n = {
         join_interest_work: 'Open to paid projects too',
         join_submit: 'Submit Application',
         join_success: 'Application received — we will be in touch soon!',
+        section_tools: 'Tools & Software',
+        tool_cat_test_management: 'Test Management',
+        tool_cat_automation: 'Automation',
+        tool_cat_api: 'API Testing',
+        tool_cat_performance: 'Performance',
+        tool_cat_cicd: 'CI/CD',
+        tool_cat_vcs: 'Version Control',
+        tool_cat_database: 'Database',
+        tool_cat_monitoring: 'Monitoring',
+        tool_cat_collaboration: 'Collaboration',
+        tool_cat_device: 'Device / Platform',
     },
     th: {
         nav_home: 'หน้าแรก',
@@ -230,6 +242,17 @@ const i18n = {
         join_interest_work: 'รับงานด้วย',
         join_submit: 'ส่งใบสมัคร',
         join_success: 'ได้รับข้อมูลแล้ว — จะติดต่อกลับโดยเร็วครับ!',
+        section_tools: 'เครื่องมือที่ใช้',
+        tool_cat_test_management: 'การจัดการทดสอบ',
+        tool_cat_automation: 'การทดสอบอัตโนมัติ',
+        tool_cat_api: 'การทดสอบ API',
+        tool_cat_performance: 'ประสิทธิภาพ',
+        tool_cat_cicd: 'CI/CD',
+        tool_cat_vcs: 'การควบคุมเวอร์ชัน',
+        tool_cat_database: 'ฐานข้อมูล',
+        tool_cat_monitoring: 'การตรวจสอบระบบ',
+        tool_cat_collaboration: 'การทำงานร่วมกัน',
+        tool_cat_device: 'อุปกรณ์ / แพลตฟอร์ม',
     }
 };
 
@@ -274,6 +297,7 @@ function applyLang(lang) {
 
     if (_profileData) renderProfile(_profileData);
     if (_skillsData) renderSkills(_skillsData);
+    if (_toolsData) renderTools(_toolsData);
     if (allProjects.length > 0) { renderRecentProjects(); renderProjects(); }
 }
 
@@ -347,6 +371,7 @@ async function loadAll() {
     try { renderCertifications(getSheetData(workbook, 'Certifications')); } catch(e) { console.error('Certifications:', e); }
     try { renderAwards(getSheetData(workbook, 'Awards')); } catch(e) { console.error('Awards:', e); }
     try { renderSkills(getSheetData(workbook, 'Skills')); } catch(e) { console.error('Skills:', e); }
+    try { renderTools(getSheetData(workbook, 'Tools')); } catch(e) { console.error('Tools:', e); }
 }
 
 // ── Profile ───────────────────────────────────────────────
@@ -354,7 +379,7 @@ async function loadAll() {
 function renderProfile(profile) {
     _profileData = profile;
 
-    const name = profile.Name || '';
+    const name = pickLang(profile, 'Name') || '';
     document.getElementById('home-name').textContent = name;
     const navBrand = document.getElementById('nav-name');
     if (navBrand) navBrand.textContent = name;
@@ -674,6 +699,82 @@ function renderSkills(data) {
     container.appendChild(groupsEl);
 }
 
+// ── Tools ─────────────────────────────────────────────────
+
+const TOOL_CAT_ORDER = [
+    ['Test Management', 'tool_cat_test_management'],
+    ['Automation',      'tool_cat_automation'],
+    ['API Testing',     'tool_cat_api'],
+    ['Performance',     'tool_cat_performance'],
+    ['CI/CD',           'tool_cat_cicd'],
+    ['Version Control', 'tool_cat_vcs'],
+    ['Database',        'tool_cat_database'],
+    ['Monitoring',      'tool_cat_monitoring'],
+    ['Collaboration',   'tool_cat_collaboration'],
+    ['Device / Platform', 'tool_cat_device'],
+];
+
+function renderTools(data) {
+    _toolsData = data;
+    console.log('[renderTools] called, rows:', data.length);
+    const container = document.getElementById('tools-list');
+    if (!container) { console.warn('[renderTools] container not found'); return; }
+    container.innerHTML = '';
+
+    const groups = {};
+    data.forEach(row => {
+        const cat = String(row['Category'] || '').trim();
+        const name = String(row['Tool_Name'] || '').trim();
+        if (!cat || !name) return;
+        if (!groups[cat]) groups[cat] = [];
+        groups[cat].push(name);
+    });
+
+    const groupsEl = document.createElement('div');
+    groupsEl.className = 'skills-groups';
+
+    const rendered = new Set();
+    TOOL_CAT_ORDER.forEach(([cat, i18nKey]) => {
+        if (!groups[cat]) return;
+        rendered.add(cat);
+        const row = document.createElement('div');
+        row.className = 'skill-level-group';
+        const badge = document.createElement('span');
+        badge.className = 'skill-level-label skill-level--tool';
+        badge.textContent = t(i18nKey);
+        const tagsEl = document.createElement('div');
+        tagsEl.className = 'skill-tags';
+        groups[cat].forEach(name => {
+            const tag = document.createElement('span');
+            tag.className = 'skill-tag';
+            tag.textContent = name;
+            tagsEl.appendChild(tag);
+        });
+        row.append(badge, tagsEl);
+        groupsEl.appendChild(row);
+    });
+
+    // fallback: categories not in TOOL_CAT_ORDER
+    Object.keys(groups).filter(c => !rendered.has(c)).forEach(cat => {
+        const row = document.createElement('div');
+        row.className = 'skill-level-group';
+        const badge = document.createElement('span');
+        badge.className = 'skill-level-label skill-level--tool';
+        badge.textContent = cat;
+        const tagsEl = document.createElement('div');
+        tagsEl.className = 'skill-tags';
+        groups[cat].forEach(name => {
+            const tag = document.createElement('span');
+            tag.className = 'skill-tag';
+            tag.textContent = name;
+            tagsEl.appendChild(tag);
+        });
+        row.append(badge, tagsEl);
+        groupsEl.appendChild(row);
+    });
+
+    container.appendChild(groupsEl);
+}
 
 // ── Media / Gallery ───────────────────────────────────────
 

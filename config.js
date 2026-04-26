@@ -10,7 +10,7 @@ const siteConfig = {
         about:    true,
         projects: true,
         join:     true,
-        contact:  true,
+        contact:  false,
  
     }
 };

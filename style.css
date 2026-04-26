@@ -954,6 +954,7 @@ h2 {
 .skill-level--advanced     { background: #555; color: #fff; }
 .skill-level--intermediate { background: #999; color: #fff; }
 .skill-level--beginner     { background: #ddd; color: #555; }
+.skill-level--tool         { background: #1a6e3c; color: #fff; }
 
 .skill-tags {
     display: flex;
@@ -1209,6 +1210,7 @@ h2 {
     color: #c8c8c8;
 }
 [data-theme="dark"] .skill-level--beginner { background: #2a2a2a; color: #aaa; }
+[data-theme="dark"] .skill-level--tool     { background: #0f4d28; color: #7de0a8; }
 
 /* Projects */
 [data-theme="dark"] #projects       { background: #121212; }
