@@ -929,4 +929,11 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-document.addEventListener('DOMContentLoaded', () => { initTheme(); initLang(); initNav(); loadAll(); });
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('loading-overlay');
+    if (!overlay) return;
+    overlay.classList.add('fade-out');
+    overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
+}
+
+document.addEventListener('DOMContentLoaded', () => { initTheme(); initLang(); initNav(); loadAll().finally(hideLoadingOverlay); });
