@@ -444,6 +444,64 @@ h2 {
     text-align: center;
 }
 
+/* Nav Guide */
+.home-nav-guide {
+    border-top: 1px solid #eee;
+    padding-top: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.nav-guide-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #aaa;
+    margin: 0 0 0.75rem;
+}
+
+.nav-guide-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.nav-guide-item {
+    display: grid;
+    grid-template-columns: 1.6rem 7rem 1fr;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.45rem 0.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+}
+
+.nav-guide-item:hover {
+    background: #f5f5f5;
+}
+
+.nav-guide-icon {
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.nav-guide-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+}
+
+.nav-guide-desc {
+    font-size: 0.85rem;
+    color: #777;
+}
+
 /* ── About ── */
 #about {
     background: #fff;
@@ -1272,6 +1330,10 @@ h2 {
 [data-theme="dark"] .home-contact   { border-color: #222; }
 [data-theme="dark"] .home-contact-card { background: #1a1a1a; }
 [data-theme="dark"] .home-last-updated { border-color: #222; }
+[data-theme="dark"] .home-nav-guide   { border-color: #222; }
+[data-theme="dark"] .nav-guide-item:hover { background: #1a1a1a; }
+[data-theme="dark"] .nav-guide-label  { color: #ddd; }
+[data-theme="dark"] .nav-guide-desc   { color: #666; }
 [data-theme="dark"] .last-updated-stale { background: #2a1a0a; border-color: #6b3a00; color: #f0a060; }
 
 [data-theme="dark"] .recent-card {

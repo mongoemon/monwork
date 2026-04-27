@@ -182,6 +182,12 @@ const i18n = {
         section_playground: 'Playground',
         playground_desc: 'Personal experiments and side projects — things built for fun, learning, or solving my own problems.',
         playground_search_ph: 'Search projects…',
+        guide_title: 'Explore',
+        guide_about: 'Professional background, work history, skills, and certifications',
+        guide_projects: 'Portfolio of professional work across software and games',
+        guide_playground: 'Personal experiments and side projects',
+        guide_join: 'Apply to join the QA team and work on real testing projects',
+        guide_contact: 'Send a message or reach out for opportunities',
         last_updated: 'Last updated',
         last_updated_stale: 'This portfolio has not been updated in over 6 months. For the most current information, please contact the owner directly.',
     },
@@ -263,6 +269,12 @@ const i18n = {
         section_playground: 'Playground',
         playground_desc: 'โปรเจคส่วนตัวที่ทดลองสร้างเพื่อเรียนรู้ แก้ปัญหาของตัวเอง หรือแค่อยากลอง',
         playground_search_ph: 'ค้นหาโปรเจค…',
+        guide_title: 'สำรวจ',
+        guide_about: 'ประวัติการทำงาน ประสบการณ์ ทักษะ และใบรับรอง',
+        guide_projects: 'ผลงานโปรเจคจริงที่เคยทำ ทั้งซอฟต์แวร์และเกม',
+        guide_playground: 'โปรเจคส่วนตัวที่ทดลองสร้างเพื่อเรียนรู้หรือแก้ปัญหาที่สนใจ',
+        guide_join: 'สมัครเข้าร่วมทีม QA และเรียนรู้จากงานจริง',
+        guide_contact: 'ส่งข้อความหรือติดต่อสอบถามเรื่องงาน',
         last_updated: 'อัพเดทล่าสุด',
         last_updated_stale: 'Portfolio นี้ไม่มีการเปลี่ยนแปลงมานานกว่า 6 เดือนแล้ว หากต้องการข้อมูลล่าสุด กรุณาติดต่อเจ้าของโดยตรงอีกครั้ง',
     }
@@ -309,6 +321,7 @@ function applyLang(lang) {
 
     if (_profileData) renderProfile(_profileData);
     if (_experienceData) renderExperience(_experienceData);
+    renderNavGuide();
     if (_lastPushedDate) renderLastUpdated(_lastPushedDate);
     if (_skillsData) renderSkills(_skillsData);
     if (_toolsData) renderTools(_toolsData);
@@ -420,6 +433,37 @@ function renderProfile(profile) {
     document.getElementById('about-bio').textContent = pickLang(profile, 'Bio') || pickLang(profile, 'Intro');
     const loc = pickLang(profile, 'Location');
     document.getElementById('about-location').textContent = loc ? `📍 ${loc}` : '';
+}
+
+// ── Nav Guide (home page menu overview) ──────────────────
+
+const NAV_GUIDE_PAGES = [
+    { id: 'about',      icon: '👤', key: 'guide_about' },
+    { id: 'projects',   icon: '💼', key: 'guide_projects' },
+    { id: 'playground', icon: '🧪', key: 'guide_playground' },
+    { id: 'join',       icon: '🤝', key: 'guide_join' },
+    { id: 'contact',    icon: '✉️',  key: 'guide_contact' },
+];
+
+function renderNavGuide() {
+    const el = document.getElementById('home-nav-guide');
+    if (!el) return;
+    const pages = (siteConfig || {}).pages || {};
+    const visible = NAV_GUIDE_PAGES.filter(p => pages[p.id] !== false);
+    if (visible.length === 0) { el.style.display = 'none'; return; }
+    el.style.display = '';
+    el.innerHTML = `
+        <h3 class="nav-guide-title">${t('guide_title')}</h3>
+        <ul class="nav-guide-list">
+            ${visible.map(p => `
+            <li>
+                <a href="#${p.id}" class="nav-guide-item">
+                    <span class="nav-guide-icon">${p.icon}</span>
+                    <span class="nav-guide-label">${t(`nav_${p.id}`)}</span>
+                    <span class="nav-guide-desc">${t(p.key)}</span>
+                </a>
+            </li>`).join('')}
+        </ul>`;
 }
 
 // ── Last Updated (GitHub) ─────────────────────────────────
@@ -1064,4 +1108,4 @@ function hideLoadingOverlay() {
     overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
 }
 
-document.addEventListener('DOMContentLoaded', () => { initTheme(); initLang(); initNav(); loadAll().finally(hideLoadingOverlay); loadLastUpdated(); });
+document.addEventListener('DOMContentLoaded', () => { initTheme(); initLang(); initNav(); renderNavGuide(); loadAll().finally(hideLoadingOverlay); loadLastUpdated(); });
