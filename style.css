@@ -612,6 +612,23 @@ h2 {
     background: #f9f9f9;
 }
 
+/* ── Playground ── */
+#playground {
+    background: #fff;
+}
+
+.section-desc {
+    margin: -0.5rem 0 1.5rem;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+#playground-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 .project-tabs {
     display: flex;
     gap: 0.25rem;
@@ -1308,8 +1325,10 @@ h2 {
 [data-theme="dark"] .skill-level--beginner { background: #2a2a2a; color: #aaa; }
 [data-theme="dark"] .skill-level--tool     { background: #0f4d28; color: #7de0a8; }
 
-/* Projects */
+/* Projects / Playground */
 [data-theme="dark"] #projects       { background: #121212; }
+[data-theme="dark"] #playground     { background: #0e0e0e; }
+[data-theme="dark"] .section-desc   { color: #666; }
 [data-theme="dark"] .project-tabs   { border-color: #2a2a2a; }
 [data-theme="dark"] .project-tab    { color: #666; }
 [data-theme="dark"] .project-tab:hover { color: #bbb; }

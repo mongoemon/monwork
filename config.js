@@ -7,10 +7,11 @@ const siteConfig = {
      * - 'contact' hides the Contact nav link (the form on home stays visible)
      */
     pages: {
-        about:    true,
-        projects: true,
-        join:     true,
-        contact:  false,
+        about:      true,
+        projects:   true,
+        playground: true,
+        join:       true,
+        contact:    false,
     },
 
     /*

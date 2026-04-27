@@ -89,6 +89,9 @@ function initNav() {
 let allProjects = [];
 let filteredProjects = [];
 let currentPage = 1;
+let allPlayground = [];
+let filteredPlayground = [];
+let currentPlaygroundPage = 1;
 let imageManifest = {};
 let currentLang = 'en';
 let currentCategory = 'all';
@@ -175,6 +178,10 @@ const i18n = {
         tool_cat_monitoring: 'Monitoring',
         tool_cat_collaboration: 'Collaboration',
         tool_cat_device: 'Device / Platform',
+        nav_playground: 'Playground',
+        section_playground: 'Playground',
+        playground_desc: 'Personal experiments and side projects — things built for fun, learning, or solving my own problems.',
+        playground_search_ph: 'Search projects…',
         last_updated: 'Last updated',
         last_updated_stale: 'This portfolio has not been updated in over 6 months. For the most current information, please contact the owner directly.',
     },
@@ -252,6 +259,10 @@ const i18n = {
         tool_cat_monitoring: 'การตรวจสอบระบบ',
         tool_cat_collaboration: 'การทำงานร่วมกัน',
         tool_cat_device: 'อุปกรณ์ / แพลตฟอร์ม',
+        nav_playground: 'Playground',
+        section_playground: 'Playground',
+        playground_desc: 'โปรเจคส่วนตัวที่ทดลองสร้างเพื่อเรียนรู้ แก้ปัญหาของตัวเอง หรือแค่อยากลอง',
+        playground_search_ph: 'ค้นหาโปรเจค…',
         last_updated: 'อัพเดทล่าสุด',
         last_updated_stale: 'Portfolio นี้ไม่มีการเปลี่ยนแปลงมานานกว่า 6 เดือนแล้ว หากต้องการข้อมูลล่าสุด กรุณาติดต่อเจ้าของโดยตรงอีกครั้ง',
     }
@@ -302,6 +313,7 @@ function applyLang(lang) {
     if (_skillsData) renderSkills(_skillsData);
     if (_toolsData) renderTools(_toolsData);
     if (allProjects.length > 0) { renderRecentProjects(); renderProjects(); }
+    if (allPlayground.length > 0) renderPlayground();
 }
 
 function initLang() {
@@ -368,6 +380,13 @@ async function loadAll() {
         initSearch();
         applyFilters();
     } catch(e) { console.error('Projects:', e); }
+
+    try {
+        const pgRows = getSheetData(workbook, 'Playground');
+        allPlayground = pgRows.filter(row => String(row['Project name'] || '').trim());
+        initPlaygroundSearch();
+        applyPlaygroundFilters();
+    } catch(e) { console.error('Playground:', e); }
 
     try { renderExperience(getSheetData(workbook, 'Experience')); } catch(e) { console.error('Experience:', e); }
     try { renderEducation(getSheetData(workbook, 'Education')); } catch(e) { console.error('Education:', e); }
@@ -607,55 +626,7 @@ function renderProjects() {
     }
 
     pageProjects.forEach(project => {
-        const div = document.createElement('div');
-        div.className = 'project';
-
-        const left = document.createElement('div');
-        left.className = 'project-left';
-        const projectName = pickLang(project, 'Project name');
-        const cat = project['Project_Category'] || '';
-        const catLabel = currentCategory === 'all' && cat
-            ? `<span class="project-cat project-cat--${cat.toLowerCase().replace(/[^a-z]/g, '')}">${escapeHtml(cat)}</span>`
-            : '';
-        left.innerHTML = `
-            <h3>${escapeHtml(projectName || '')}</h3>
-            ${catLabel}
-            ${project.Duration ? `<p class="duration">${escapeHtml(project.Duration)}</p>` : ''}
-            ${project['Project URL'] ? `<p class="link"><a href="${escapeHtml(project['Project URL'])}" target="_blank" rel="noopener">View Project ↗</a></p>` : ''}
-        `;
-
-        const overview = pickLang(project, 'Project overview');
-        const roles    = pickLang(project, 'Roles and Responsibility');
-        const tools    = project['Skills and Tools'];
-
-        const right = document.createElement('div');
-        right.className = 'project-right';
-        right.innerHTML = `
-            ${overview ? `
-            <div class="project-detail">
-                <p class="detail-label">${t('label_overview')}</p>
-                <p class="overview">${escapeHtml(normalizeLines(overview))}</p>
-            </div>` : ''}
-            ${roles ? `
-            <div class="project-detail">
-                <p class="detail-label">${t('label_roles')}</p>
-                <p class="roles">${escapeHtml(normalizeLines(roles))}</p>
-            </div>` : ''}
-            ${tools ? `
-            <div class="project-detail">
-                <p class="detail-label">${t('label_tools')}</p>
-                <p class="tools">${escapeHtml(tools)}</p>
-            </div>` : ''}
-        `;
-
-        const folder = String(project['Image_Folder'] || '').trim();
-        const youtube = String(project['YouTube'] || '').trim();
-        const { logoEl, galleryEl } = buildProjectMedia(folder, youtube);
-        if (logoEl) left.prepend(logoEl);
-        if (galleryEl) right.appendChild(galleryEl);
-
-        div.append(left, right);
-        list.appendChild(div);
+        list.appendChild(buildProjectCard(project, true));
     });
 
     const pagination = document.getElementById('projects-pagination');
@@ -678,8 +649,129 @@ function renderProjects() {
     }
 }
 
+function buildProjectCard(project, showCatBadge) {
+    const div = document.createElement('div');
+    div.className = 'project';
+
+    const left = document.createElement('div');
+    left.className = 'project-left';
+    const projectName = pickLang(project, 'Project name');
+    const cat = project['Project_Category'] || '';
+    const catLabel = showCatBadge && currentCategory === 'all' && cat
+        ? `<span class="project-cat project-cat--${cat.toLowerCase().replace(/[^a-z]/g, '')}">${escapeHtml(cat)}</span>`
+        : '';
+    left.innerHTML = `
+        <h3>${escapeHtml(projectName || '')}</h3>
+        ${catLabel}
+        ${project.Duration ? `<p class="duration">${escapeHtml(project.Duration)}</p>` : ''}
+        ${project['Project URL'] ? `<p class="link"><a href="${escapeHtml(project['Project URL'])}" target="_blank" rel="noopener">View Project ↗</a></p>` : ''}
+    `;
+
+    const overview = pickLang(project, 'Project overview');
+    const roles    = pickLang(project, 'Roles and Responsibility');
+    const tools    = project['Skills and Tools'];
+
+    const right = document.createElement('div');
+    right.className = 'project-right';
+    right.innerHTML = `
+        ${overview ? `
+        <div class="project-detail">
+            <p class="detail-label">${t('label_overview')}</p>
+            <p class="overview">${escapeHtml(normalizeLines(overview))}</p>
+        </div>` : ''}
+        ${roles ? `
+        <div class="project-detail">
+            <p class="detail-label">${t('label_roles')}</p>
+            <p class="roles">${escapeHtml(normalizeLines(roles))}</p>
+        </div>` : ''}
+        ${tools ? `
+        <div class="project-detail">
+            <p class="detail-label">${t('label_tools')}</p>
+            <p class="tools">${escapeHtml(tools)}</p>
+        </div>` : ''}
+    `;
+
+    const folder = String(project['Image_Folder'] || '').trim();
+    const youtube = String(project['YouTube'] || '').trim();
+    const { logoEl, galleryEl } = buildProjectMedia(folder, youtube);
+    if (logoEl) left.prepend(logoEl);
+    if (galleryEl) right.appendChild(galleryEl);
+
+    div.append(left, right);
+    return div;
+}
+
 function scrollToProjects() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Playground ───────────────────────────────────────────
+
+function applyPlaygroundFilters() {
+    const q = (document.getElementById('playground-search')?.value || '').trim().toLowerCase();
+    filteredPlayground = q
+        ? allPlayground.filter(p =>
+            [p['Project name'], p['Project overview'], p['Skills and Tools']]
+                .some(f => String(f || '').toLowerCase().includes(q)))
+        : allPlayground.slice();
+    currentPlaygroundPage = 1;
+    renderPlayground();
+}
+
+function initPlaygroundSearch() {
+    const input = document.getElementById('playground-search');
+    if (!input) return;
+    let timer;
+    input.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(applyPlaygroundFilters, 250);
+    });
+}
+
+function renderPlayground() {
+    const totalPages = Math.ceil(filteredPlayground.length / PROJECTS_PER_PAGE);
+    const start = (currentPlaygroundPage - 1) * PROJECTS_PER_PAGE;
+    const page = filteredPlayground.slice(start, start + PROJECTS_PER_PAGE);
+
+    const countEl = document.getElementById('playground-search-count');
+    if (countEl) {
+        const n = filteredPlayground.length;
+        countEl.textContent = currentLang === 'th'
+            ? `${n} โปรเจค`
+            : `${n} project${n !== 1 ? 's' : ''}`;
+    }
+
+    const list = document.getElementById('playground-list');
+    if (!list) return;
+    list.innerHTML = '';
+
+    if (filteredPlayground.length === 0) {
+        list.innerHTML = `<p class="no-results">${t('no_results')}</p>`;
+    }
+
+    page.forEach(project => {
+        list.appendChild(buildProjectCard(project, false));
+    });
+
+    const pagination = document.getElementById('playground-pagination');
+    if (!pagination) return;
+    pagination.innerHTML = '';
+    if (totalPages > 1) {
+        const prev = document.createElement('button');
+        prev.textContent = t('pagination_prev');
+        prev.disabled = currentPlaygroundPage <= 1;
+        prev.onclick = () => { currentPlaygroundPage--; renderPlayground(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+        const info = document.createElement('span');
+        info.textContent = `${currentPlaygroundPage} / ${totalPages}`;
+
+        const next = document.createElement('button');
+        next.textContent = t('pagination_next');
+        next.disabled = currentPlaygroundPage >= totalPages;
+        next.onclick = () => { currentPlaygroundPage++; renderPlayground(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+        pagination.append(prev, info, next);
+    }
 }
 
 // ── Skills ────────────────────────────────────────────────
