@@ -182,6 +182,14 @@ const i18n = {
         section_playground: 'Playground',
         playground_desc: 'Personal experiments and side projects — things built for fun, learning, or solving my own problems.',
         playground_search_ph: 'Search projects…',
+        project_info: [
+            ['💼', 'Project Name & Period', 'Title and timeframe of the project'],
+            ['🔗', 'Project Link', 'External link to the live site or store page (if available)'],
+            ['📋', 'Project Overview', 'What the project is and its background'],
+            ['🎯', 'Roles & Responsibilities', 'What I specifically did on this project'],
+            ['🛠️', 'Tools', 'Technologies and tools used'],
+            ['🖼️', 'Gallery', 'Screenshots or demo video (click image to enlarge)'],
+        ],
         guide_title: 'Explore',
         guide_about: 'Professional background, work history, skills, and certifications',
         guide_projects: 'Portfolio of professional work across software and games',
@@ -269,6 +277,14 @@ const i18n = {
         section_playground: 'Playground',
         playground_desc: 'โปรเจคส่วนตัวที่ทดลองสร้างเพื่อเรียนรู้ แก้ปัญหาของตัวเอง หรือแค่อยากลอง',
         playground_search_ph: 'ค้นหาโปรเจค…',
+        project_info: [
+            ['💼', 'ชื่อโปรเจค & ระยะเวลา', 'ชื่อและช่วงเวลาที่ทำโปรเจคนี้'],
+            ['🔗', 'ลิงค์โปรเจค', 'ลิงค์ไปยังเว็บหรือหน้า store (ถ้ามี)'],
+            ['📋', 'ภาพรวมโปรเจค', 'โปรเจคนี้คืออะไร และที่มาของงาน'],
+            ['🎯', 'บทบาทและหน้าที่', 'สิ่งที่ผมรับผิดชอบในโปรเจคนี้โดยเฉพาะ'],
+            ['🛠️', 'เครื่องมือที่ใช้', 'เทคโนโลยีและเครื่องมือที่ใช้ในการทำงาน'],
+            ['🖼️', 'แกลเลอรี', 'ภาพหน้าจอหรือวิดีโอสาธิต (คลิกรูปเพื่อขยาย)'],
+        ],
         guide_title: 'สำรวจ',
         guide_about: 'ประวัติการทำงาน ประสบการณ์ ทักษะ และใบรับรอง',
         guide_projects: 'ผลงานโปรเจคจริงที่เคยทำ ทั้งซอฟต์แวร์และเกม',
@@ -327,6 +343,7 @@ function applyLang(lang) {
     if (_toolsData) renderTools(_toolsData);
     if (allProjects.length > 0) { renderRecentProjects(); renderProjects(); }
     if (allPlayground.length > 0) renderPlayground();
+    renderProjectInfoPopup();
 }
 
 function initLang() {
@@ -613,6 +630,51 @@ function applyFilters() {
         : base;
     currentPage = 1;
     renderProjects();
+}
+
+function renderProjectInfoPopup() {
+    const list = document.querySelector('#project-info-popup .info-popup-list');
+    if (!list) return;
+    const items = t('project_info');
+    if (!Array.isArray(items)) return;
+    list.innerHTML = items.map(([icon, label, desc]) => `
+        <li><span class="info-icon">${icon}</span><span class="info-label">${escapeHtml(label)}</span><span class="info-desc">${escapeHtml(desc)}</span></li>
+    `).join('');
+}
+
+function initProjectInfoPopup() {
+    const btn   = document.getElementById('project-info-btn');
+    const popup = document.getElementById('project-info-popup');
+    const close = popup?.querySelector('.info-popup-close');
+    if (!btn || !popup) return;
+
+    renderProjectInfoPopup();
+
+    btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const open = !popup.hidden;
+        popup.hidden = open;
+        btn.classList.toggle('info-btn--active', !open);
+    });
+
+    close?.addEventListener('click', () => {
+        popup.hidden = true;
+        btn.classList.remove('info-btn--active');
+    });
+
+    document.addEventListener('click', e => {
+        if (!popup.hidden && !popup.contains(e.target) && e.target !== btn) {
+            popup.hidden = true;
+            btn.classList.remove('info-btn--active');
+        }
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !popup.hidden) {
+            popup.hidden = true;
+            btn.classList.remove('info-btn--active');
+        }
+    });
 }
 
 function initSearch() {
@@ -1108,4 +1170,4 @@ function hideLoadingOverlay() {
     overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
 }
 
-document.addEventListener('DOMContentLoaded', () => { initTheme(); initLang(); initNav(); renderNavGuide(); loadAll().finally(hideLoadingOverlay); loadLastUpdated(); });
+document.addEventListener('DOMContentLoaded', () => { initTheme(); initLang(); initNav(); renderNavGuide(); initProjectInfoPopup(); loadAll().finally(hideLoadingOverlay); loadLastUpdated(); });
