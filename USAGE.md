@@ -318,15 +318,35 @@ This reads `data.xlsx`, fills in the `_TH` columns, and saves the file. Use this
 
 ## Categorizing Projects
 
-Each project should have a `Project_Category` value of `Software`, `Game`, or `etc.`. This controls the tab filter on the Projects page.
+Each project must have a `Project_Category` value that matches one of the categories defined in `config.js`. This controls the tab filter on the Projects page.
+
+### Adding a new category
+
+Open `config.js` and add an entry to `projectCategories`:
+
+```js
+projectCategories: [
+    { value: 'Software', en: 'Software', th: 'ซอฟต์แวร์' },
+    { value: 'Game',     en: 'Game',     th: 'เกม'       },
+    { value: 'etc.',     en: 'etc.',     th: 'อื่นๆ'     },
+    { value: 'Design',   en: 'Design',   th: 'ดีไซน์'    }, // ← new
+],
+```
+
+- `value` — the exact string to put in the `Project_Category` column (case-sensitive).
+- `en` / `th` — the tab label shown in each language.
+
+The tab will appear automatically — no changes to `index.html` or `script.js` needed.
+
+### Setting a project's category
 
 **Option A — Type it directly in Excel**
 
-Open `data.xlsx`, find the `Project_Category` column in the `Project` sheet, and type the category for each row.
+Open `data.xlsx`, find the `Project_Category` column in the `Project` sheet, and type the category value exactly as it appears in `config.js`.
 
 **Option B — Use the script**
 
-Open `categorize-projects.js`. Add each project name to the correct list:
+Open `categorize-projects.js`. Add each project name to the correct list, and add any new categories you created:
 
 ```js
 const categories = {
@@ -341,10 +361,11 @@ const categories = {
     'etc.': [
         'Some Other Project',
     ],
+    // Add new category here to match config.js
 };
 ```
 
-The project name must match the `Project name` column in the sheet exactly (case-sensitive). Any project not listed defaults to `etc.`.
+The project name must match the `Project name` column exactly (case-sensitive). Any project not listed defaults to `etc.`.
 
 Then run:
 

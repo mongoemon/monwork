@@ -19,4 +19,20 @@ const siteConfig = {
      * on the home page. Set to 0 to disable the warning entirely.
      */
     staleWarningMonths: 6,
+
+    /*
+     * Project category tabs shown on the Projects page.
+     * Each entry must match the exact value used in the Project_Category
+     * column of data.xlsx (case-sensitive).
+     *
+     * To add a new category:
+     *   1. Add an entry here with its EN and TH labels.
+     *   2. Use the same `value` string in the Project_Category column.
+     *   3. Update categorize-projects.js if you use that script.
+     */
+    projectCategories: [
+        { value: 'Software', en: 'Software', th: 'ซอฟต์แวร์' },
+        { value: 'Game',     en: 'Game',     th: 'เกม'       },
+        { value: 'etc.',     en: 'etc.',     th: 'อื่นๆ'     },
+    ],
 };

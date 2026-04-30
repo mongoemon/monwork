@@ -338,6 +338,7 @@ function applyLang(lang) {
     if (_profileData) renderProfile(_profileData);
     if (_experienceData) renderExperience(_experienceData);
     renderNavGuide();
+    renderCategoryTabLabels();
     if (_lastPushedDate) renderLastUpdated(_lastPushedDate);
     if (_skillsData) renderSkills(_skillsData);
     if (_toolsData) renderTools(_toolsData);
@@ -393,6 +394,7 @@ async function loadAll() {
         }));
         renderRecentProjects();
         initCategoryTabs();
+        updateTabCounts();
         initSearch();
         applyFilters();
         renderSkills(mockData.skills);
@@ -405,8 +407,8 @@ async function loadAll() {
         const projectRows = getSheetData(workbook, 'Project');
         allProjects = projectRows.filter(row => String(row['Project name']).trim());
         renderRecentProjects();
-        updateTabCounts();
         initCategoryTabs();
+        updateTabCounts();
         initSearch();
         applyFilters();
     } catch(e) { console.error('Projects:', e); }
@@ -698,7 +700,31 @@ function updateTabCounts() {
     });
 }
 
+function buildCategoryTabs() {
+    const container = document.querySelector('.project-tabs');
+    if (!container) return;
+    const cats = (siteConfig || {}).projectCategories || [];
+    cats.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'project-tab';
+        btn.dataset.category = cat.value;
+        btn.innerHTML = `<span>${escapeHtml(currentLang === 'th' ? cat.th : cat.en)}</span><span class="tab-count"></span>`;
+        container.appendChild(btn);
+    });
+}
+
+function renderCategoryTabLabels() {
+    const cats = (siteConfig || {}).projectCategories || [];
+    document.querySelectorAll('.project-tab[data-category]').forEach(btn => {
+        const cat = cats.find(c => c.value === btn.dataset.category);
+        if (!cat) return;
+        const span = btn.querySelector('span:first-child');
+        if (span) span.textContent = currentLang === 'th' ? cat.th : cat.en;
+    });
+}
+
 function initCategoryTabs() {
+    buildCategoryTabs();
     document.querySelectorAll('.project-tab').forEach(btn => {
         btn.addEventListener('click', () => {
             currentCategory = btn.dataset.category;
