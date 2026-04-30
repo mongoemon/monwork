@@ -26,6 +26,7 @@ This document explains the website's structure and how to maintain or extend it 
 11. [Contact & Join Forms](#contact--join-forms)
 12. [Deploying the Site](#deploying-the-site)
 13. [Troubleshooting](#troubleshooting)
+14. [Git Commands](#git-commands)
 
 ---
 
@@ -465,3 +466,153 @@ Log in to Formspree and check whether the form is active and the email address i
 
 **Changes to `data.xlsx` are not reflected after refreshing:**
 Some browsers aggressively cache files. Do a hard refresh: `Cmd + Shift + R` on Mac, `Ctrl + Shift + R` on Windows.
+
+---
+
+## Git Commands
+
+Git saves a history of every change you make. Think of it as checkpoints — you create one whenever you want to record your current state and share it to the web.
+
+All commands below are run in a terminal from the project folder (`d:\work\practice\portfolio4`).
+
+---
+
+### Check what has changed
+
+```bash
+git status
+```
+
+Shows three groups:
+- **Changes to be committed** — staged, will be in the next checkpoint.
+- **Changes not staged for commit** — modified files not yet included.
+- **Untracked files** — brand new files git has never seen.
+
+---
+
+### Stage files (mark them for the next checkpoint)
+
+Stage a specific file:
+```bash
+git add data.xlsx
+```
+
+Stage everything in a folder (new files + changes + deletions):
+```bash
+git add -A images/
+```
+
+Stage multiple specific files at once:
+```bash
+git add data.xlsx images/manifest.json script.js
+```
+
+> **Tip:** Never use `git add .` or `git add -A` at the root — it may pick up temp files like `~$data.xlsx` (Excel lock file) by accident.
+
+---
+
+### Commit (save a checkpoint)
+
+```bash
+git commit -m "Your message here"
+```
+
+The message should briefly describe what changed, e.g.:
+
+```bash
+git commit -m "Add new project images for cog and mxg"
+git commit -m "Update bio and experience in data.xlsx"
+git commit -m "Fix typo in project description"
+```
+
+---
+
+### Push (send the checkpoint to GitHub / update the live site)
+
+```bash
+git push
+```
+
+GitHub Pages will rebuild the site automatically within ~1 minute.
+
+---
+
+### Pull (get the latest changes from GitHub)
+
+If you work on multiple computers, always pull before you start editing:
+
+```bash
+git pull
+```
+
+This downloads any commits that are on GitHub but not on your local machine.
+
+---
+
+### Typical workflow for updating the portfolio
+
+```bash
+# 1. Get the latest version (if working across machines)
+git pull
+
+# 2. Edit data.xlsx, add/remove images, etc.
+#    Run helper scripts if needed:
+node format-xlsx.js          # fix line breaks in data.xlsx
+node generate-manifest.js    # update images/manifest.json after adding/removing images
+
+# 3. Stage your changes
+git add data.xlsx images/manifest.json
+
+# 4. Stage any new or deleted images
+git add -A images/
+
+# 5. Commit with a short description
+git commit -m "Update project data and images"
+
+# 6. Push to GitHub (site goes live ~1 minute later)
+git push
+```
+
+---
+
+### View recent commit history
+
+```bash
+git log --oneline
+```
+
+Shows a compact list of recent checkpoints with their short IDs and messages.
+
+---
+
+### Undo staged changes (before committing)
+
+If you staged a file by mistake and want to un-stage it (the file itself is not changed):
+
+```bash
+git restore --staged data.xlsx
+```
+
+---
+
+### Undo local changes to a file (revert to last commit)
+
+> **Warning:** This permanently discards your unsaved edits to that file.
+
+```bash
+git restore data.xlsx
+```
+
+---
+
+### See what changed in a file
+
+```bash
+git diff data.xlsx
+```
+
+For already-staged changes:
+
+```bash
+git diff --staged data.xlsx
+```
