@@ -14,7 +14,7 @@
  *   - Enables wrapText in Excel so line breaks are visible in the spreadsheet
  */
 
-const XLSX = require('./node_modules/xlsx/xlsx.js');
+const XLSX = require('xlsx');
 const path = require('path');
 
 const FILE = path.join(__dirname, 'data.xlsx');
