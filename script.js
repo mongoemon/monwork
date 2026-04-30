@@ -529,7 +529,7 @@ function renderExperience(data) {
                     <span class="timeline-period">${escapeHtml(item.Period || '')}</span>
                 </div>
                 <div class="timeline-company">${escapeHtml(pickLang(item, 'Company') || '')}</div>
-                <p class="timeline-desc">${escapeHtml(pickLang(item, 'Description') || '')}</p>
+                <p class="timeline-desc">${escapeHtml(normalizeLines(pickLang(item, 'Description') || ''))}</p>
             </div>
         `;
         list.appendChild(div);
@@ -793,7 +793,7 @@ function buildProjectCard(project, showCatBadge) {
         ${tools ? `
         <div class="project-detail">
             <p class="detail-label">${t('label_tools')}</p>
-            <p class="tools">${escapeHtml(tools)}</p>
+            <p class="tools">${escapeHtml(normalizeLines(tools))}</p>
         </div>` : ''}
     `;
 
@@ -1160,7 +1160,11 @@ function escapeHtml(str) {
 }
 
 function normalizeLines(str) {
-    return String(str).replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n{2,}/g, '\n').trim();
+    return String(str)
+        .replace(/\r+\n/g, '\n')     // any number of CR before LF → single LF (fixes Excel \r\r\r\n artifacts)
+        .replace(/\r+/g, '\n')       // bare CRs → LF
+        .replace(/\n{3,}/g, '\n\n')  // cap at two consecutive newlines (paragraph break)
+        .trim();
 }
 
 function hideLoadingOverlay() {

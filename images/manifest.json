@@ -32,6 +32,13 @@
     "004.jpg",
     "logo.jpg"
   ],
+  "cog": [
+    "001.jpg",
+    "002.jpg",
+    "003.jpg",
+    "004.jpg",
+    "logo.png"
+  ],
   "csb": [
     "001.PNG",
     "002.PNG",
@@ -99,6 +106,20 @@
     "h6.jpg",
     "h7.jpg"
   ],
+  "imaginemejunglebook": [
+    "001.jpg",
+    "002.jpg",
+    "003.jpg",
+    "004.jpg",
+    "logo.jpg"
+  ],
+  "imaginme": [
+    "001.jpg",
+    "002.jpg",
+    "003.jpg",
+    "004.jpg",
+    "logo.jpg"
+  ],
   "imaginmebnb": [
     "image52.jpg",
     "image53.jpg",
@@ -111,6 +132,16 @@
     "image50.jpg",
     "image51.jpg",
     "logo.jpg"
+  ],
+  "imaginmelittlebean": [
+    "001.jpg",
+    "002.jpg",
+    "003.jpg",
+    "004.jpg",
+    "logo.jpg"
+  ],
+  "level": [
+    "001.jpg"
   ],
   "Linagew": [
     "1.jpg",
@@ -127,10 +158,14 @@
     "lolirock0005.jpg"
   ],
   "lotuss": [
-    "001_result.png",
-    "002_result.png",
-    "003_result.png",
-    "004_result.png",
+    "001.png",
+    "002.png",
+    "003.png",
+    "004.png",
+    "005.png",
+    "006.png",
+    "007.png",
+    "008.png",
     "logo.webp"
   ],
   "Lumen": [
@@ -197,18 +232,60 @@
     "MFSGRWiiU0005.jpg",
     "MFSGRWiiU0006.jpg"
   ],
+  "mxg": [
+    "001.jpg",
+    "002.jpg",
+    "003.jpg",
+    "004.jpg",
+    "logo.jpg"
+  ],
+  "ofm": [
+    "logo.jpg"
+  ],
+  "panya": [
+    "001.png",
+    "002.png",
+    "003.png",
+    "004.jpg",
+    "logo.jpg"
+  ],
   "pick": [
-    "ctpick3004.jpg",
-    "eb_parcel_043021_2x.jpg",
-    "hdb-pick-parcel-lockers.webp",
-    "How to Use - Google Chrome 2021-09-13 22.04.20.png",
-    "images.png",
-    "pick-network.png"
+    "001.jpg",
+    "002.jpg",
+    "003.webp",
+    "004.png",
+    "logo.png"
+  ],
+  "pokerlism": [
+    "001.PNG",
+    "002.PNG",
+    "003.png",
+    "004.png",
+    "logo.png"
+  ],
+  "ptt": [
+    "logo.jpg"
   ],
   "td": [
     "001_.jpg",
     "002.png",
     "logo.jpg"
+  ],
+  "thaidenmark": [
+    "001.png",
+    "002.png",
+    "003.png",
+    "004.png",
+    "005.png",
+    "006.png",
+    "logo.png"
+  ],
+  "tint": [
+    "001.jpg",
+    "002.jpg",
+    "003.jpg",
+    "004.jpg",
+    "logo.png"
   ],
   "TLSS": [
     "logo.jpeg",
@@ -227,6 +304,12 @@
     "04414_006.jpg",
     "71136_156848433816_4583019_n.jpg",
     "1289303387.jpg"
+  ],
+  "website": [
+    "001.png",
+    "002.png",
+    "003.png",
+    "004.png"
   ],
   "wicked": [
     "001.jpg",
