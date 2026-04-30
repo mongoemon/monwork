@@ -228,14 +228,24 @@ Each row is one project card. Order in the sheet controls the display order. The
 | `Skills and Tools` | No | Comma-separated tools, e.g. `JIRA, TestRail, Selenium`. |
 | `Image_Folder` | No | Folder name inside `images/`. Must match exactly. |
 | `YouTube` | No | One or more YouTube URLs, comma-separated. Videos appear first in the gallery. |
-| `Project_Category` | No | `Software`, `Game`, or `etc.` — controls tab filtering. |
+| `Project_Category` | No | See valid values below. Controls which tab the project appears under. |
+
+**`Project_Category` valid values — type exactly as shown, including the period:**
+
+| Value | Tab it appears under |
+|---|---|
+| `Software` | Software |
+| `Game` | Game |
+| `etc.` | etc. |
+
+> If the cell is empty or has a typo, the project will not show under any tab (it still appears under "All").
 
 **Adding a new project:**
 1. Add a new row to the `Project` sheet.
 2. Fill in `Project name` at minimum.
 3. If you have images, create a folder in `images/` and set `Image_Folder` to match the folder name exactly (case-sensitive).
 4. Run `node generate-manifest.js` after adding images.
-5. Set `Project_Category` either directly in the cell or by updating and running `categorize-projects.js`.
+5. Set `Project_Category` to `Software`, `Game`, or `etc.` (exact match, case-sensitive, including the period for `etc.`).
 
 ---
 
