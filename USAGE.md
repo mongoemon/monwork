@@ -8,9 +8,10 @@ This document explains the website's structure and how to maintain or extend it 
 
 1. [How the Site Works](#how-the-site-works)
 2. [File Map](#file-map)
-3. [Running Locally](#running-locally)
-4. [Data Source — `data.xlsx`](#data-source--dataxlsx)
-5. [Editing Content](#editing-content)
+3. [Utility Scripts Reference](#utility-scripts-reference)
+4. [Running Locally](#running-locally)
+5. [Data Source — `data.xlsx`](#data-source--dataxlsx)
+6. [Editing Content](#editing-content)
    - [Profile](#profile)
    - [Experience](#experience)
    - [Education](#education)
@@ -18,15 +19,15 @@ This document explains the website's structure and how to maintain or extend it 
    - [Awards](#awards)
    - [Skills](#skills)
    - [Projects](#projects)
-6. [Adding Project Images](#adding-project-images)
-7. [Adding Thai Translations for Projects](#adding-thai-translations-for-projects)
-8. [Categorizing Projects](#categorizing-projects)
-9. [Controlling Which Pages Are Visible](#controlling-which-pages-are-visible)
-10. [Language & Theme](#language--theme)
-11. [Contact & Join Forms](#contact--join-forms)
-12. [Deploying the Site](#deploying-the-site)
-13. [Troubleshooting](#troubleshooting)
-14. [Git Commands](#git-commands)
+7. [Adding Project Images](#adding-project-images)
+8. [Adding Thai Translations for Projects](#adding-thai-translations-for-projects)
+9. [Categorizing Projects](#categorizing-projects)
+10. [Controlling Which Pages Are Visible](#controlling-which-pages-are-visible)
+11. [Language & Theme](#language--theme)
+12. [Contact & Join Forms](#contact--join-forms)
+13. [Deploying the Site](#deploying-the-site)
+14. [Troubleshooting](#troubleshooting)
+15. [Git Commands](#git-commands)
 
 ---
 
@@ -53,26 +54,87 @@ The site is a **Single-Page Application (SPA)**. Clicking nav links does not loa
 ## File Map
 
 ```
-monwork/
-├── index.html              ← Page structure (sections, nav, forms). Edit sparingly.
-├── style.css               ← All visual styles. Edit here to change colours, layout, fonts.
-├── script.js               ← All behaviour: navigation, rendering, search, gallery, i18n, theme.
-├── config.js               ← Toggle which sections are visible and their nav order.
-├── data.js                 ← Fallback mock data shown when data.xlsx cannot load.
-├── data.xlsx               ← PRIMARY data source. Edit this for all content changes.
+portfolio/
+├── index.html                ← Page structure (sections, nav, forms). Edit sparingly.
+├── style.css                 ← All visual styles. Edit here to change colours, layout, fonts.
+├── script.js                 ← All behaviour: navigation, rendering, search, gallery, i18n, theme.
+├── config.js                 ← Site configuration: toggle pages, define project category tabs.
+├── data.js                   ← Fallback mock data used when data.xlsx fails to load.
+├── data.xlsx                 ← PRIMARY data source. Edit this for all content changes.
 │
 ├── images/
-│   ├── manifest.json       ← Auto-generated index of all image files. Do not edit by hand.
-│   └── <FolderName>/       ← One folder per project. Name must match Image_Folder in data.xlsx.
-│       ├── logo.png        ← Special: shown as the project logo (separate from the gallery).
-│       └── screenshot1.png ← Any other images appear in the project gallery.
+│   ├── manifest.json         ← Auto-generated image index. Do not edit by hand.
+│   └── <FolderName>/         ← One folder per project. Name must match Image_Folder in data.xlsx.
+│       ├── logo.png          ← Shown as the project logo card thumbnail.
+│       └── screenshot1.png   ← All other images appear in the project gallery.
 │
-├── generate-manifest.js    ← Node.js script: regenerates images/manifest.json.
-├── categorize-projects.js  ← Node.js script: writes Project_Category into data.xlsx.
-└── translate-projects.js   ← Node.js script: writes Thai translations into data.xlsx.
+│   ── Utility scripts (run from terminal, not part of the website) ──
+│
+├── generate-manifest.js      ← Regenerates images/manifest.json after adding or removing images.
+├── style-xlsx.js             ← Applies header styling, column widths, and wrapText to data.xlsx.
+├── format-xlsx.js            ← Normalises line breaks in data.xlsx (legacy — style-xlsx.js covers this).
+├── repair-data.js            ← One-time fix: adds missing Domain column to Skills and Tools sheets,
+│                                and seeds Software Development mockup data.
+├── add-bilingual.js          ← Writes Thai translations into the Profile and Skills sheets.
+├── translate-projects.js     ← Writes Thai translations into the Project sheet.
+├── categorize-projects.js    ← Writes Project_Category values into the Project sheet.
+└── update-playground.js      ← Appends new projects to the Playground sheet.
 ```
 
-**Key rule:** The three `*.js` Node scripts are utilities that modify `data.xlsx`. They are not part of the website itself. You run them from the terminal when you need them.
+**Key rule:** All `*.js` files other than `script.js`, `config.js`, and `data.js` are Node.js utility scripts. They modify `data.xlsx` from the terminal and are never loaded by the browser. Run them when you need them; they do nothing automatically.
+
+---
+
+## Utility Scripts Reference
+
+All scripts below live in the project root and are run with `node <script>`. None of them affect the website directly — they only read and write `data.xlsx` or `images/manifest.json`.
+
+### Website files (loaded by the browser)
+
+| File | Purpose |
+|---|---|
+| `index.html` | Page shell — all sections, nav, and forms. Rarely needs editing. |
+| `style.css` | Every visual style rule. Edit here for colours, layout, and typography. |
+| `script.js` | All runtime behaviour: navigation, rendering, search, gallery, i18n, dark mode. |
+| `config.js` | Toggle which pages are visible and define project category tabs. |
+| `data.js` | Fallback mock data rendered when `data.xlsx` fails to load (e.g. no local server). |
+| `data.xlsx` | **Primary data source.** Contains all real content across ten sheets. |
+
+### Data file
+
+| File | Sheets | Notes |
+|---|---|---|
+| `data.xlsx` | Profile, Experience, Education, Certifications, Awards, Skills, Tools, Project, Playground, Contact | Fetched by the browser on every page load via SheetJS. Editing and saving this file is all that is needed to update site content. |
+
+### Utility scripts (terminal only)
+
+| Script | What it does | When to run |
+|---|---|---|
+| `generate-manifest.js` | Scans every subfolder inside `images/` and writes `images/manifest.json`. | After adding, renaming, or deleting any image file. |
+| `style-xlsx.js` | Applies dark-blue header styling, sets column widths, freezes the header row, enables auto-filter, and normalises line breaks across all sheets. | After editing `data.xlsx` to keep formatting consistent. |
+| `format-xlsx.js` | Normalises line-break characters (`\r\n`, `\r`, literal `\n` text) in all text cells. | Covered by `style-xlsx.js`; use this only if you need the fix without re-styling. |
+| `repair-data.js` | One-time setup script. Adds the missing `Domain` column to the Skills and Tools sheets, tags existing rows (`qa` or `software development`), and seeds Software Development mockup skills, tools, and projects. | Run once on a fresh clone, or if the Skills / Tools sections appear empty on the site. |
+| `add-bilingual.js` | Writes Thai translations directly into the `Profile` and `Skills` sheets without disturbing existing cell content. | When adding or updating Thai text for profile fields or skill names. |
+| `translate-projects.js` | Reads a translation map defined inside the script and writes `_TH` column values into the `Project` sheet. | When translating many projects at once instead of editing cells manually. |
+| `categorize-projects.js` | Reads a category map defined inside the script and writes `Project_Category` values into the `Project` sheet. | When assigning or bulk-updating project categories. |
+| `update-playground.js` | Appends new project rows to the `Playground` sheet. | When adding new playground projects without opening Excel. |
+
+### Typical workflow after editing `data.xlsx`
+
+```bash
+# 1. Edit data.xlsx in Excel (or run a utility script above)
+
+# 2. Re-apply formatting (always safe to re-run)
+node style-xlsx.js
+
+# 3. If you added or removed images
+node generate-manifest.js
+
+# 4. Stage and commit
+git add data.xlsx images/manifest.json
+git commit -m "Update content"
+git push
+```
 
 ---
 
@@ -106,8 +168,11 @@ Open `data.xlsx` in Excel, LibreOffice Calc, or Google Sheets. Each tab (sheet) 
 | `Education` | School / degree list |
 | `Certifications` | Certification badges |
 | `Awards` | Awards list |
-| `Skills` | Skill tags grouped by level |
-| `Project` | All project cards |
+| `Skills` | Skill tags grouped by level, split into QA and Software Development sections |
+| `Tools` | Tool tags grouped by category, split into QA and Software Development sections |
+| `Project` | All project cards on the Projects page |
+| `Playground` | Personal / side-project cards on the Playground page |
+| `Contact` | Email, phone, LinkedIn URL, GitHub URL |
 
 **Bilingual columns:** Fields that support Thai translation use a `_TH` suffix. For example, the `Project name` column has a matching `Project name_TH` column. If the user's browser language is Thai, the `_TH` value is shown. If the `_TH` column is empty, the English value is used as a fallback.
 
@@ -196,7 +261,8 @@ Sheet: **`Skills`**
 |---|---|
 | `Skill_Name` | The skill label. Add `Skill_Name_TH` for Thai. |
 | `Level` | A number 1–5. Controls which group the skill appears in. |
-| `Category` | Optional grouping label (not currently displayed but kept for future use). |
+| `Domain` | **Required.** Either `qa` or `software development` (lowercase). Determines which section the skill appears under on the About page. |
+| `Category` | Optional grouping label (not currently displayed, kept for reference). |
 
 Level scale:
 
@@ -206,6 +272,8 @@ Level scale:
 | 4 | Advanced |
 | 3 | Intermediate |
 | 1–2 | Beginner |
+
+> **Important:** If `Domain` is missing or misspelled, the skill will not appear on the site. Valid values are exactly `qa` and `software development`.
 
 ---
 

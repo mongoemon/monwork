@@ -116,7 +116,10 @@ const i18n = {
         section_education: 'Education',
         section_certifications: 'Certifications',
         section_awards: 'Awards',
-        section_skills: 'Skills',
+        section_qa_skill: 'QA Skill',
+        section_dev_skill: 'Software Development Skill',
+        section_qa_tools: 'QA Tool & Software',
+        section_dev_tools: 'Software Development Tool & Software',
         section_projects: 'Projects',
         contact_heading: 'Get in Touch',
         contact_intro: 'Feel free to reach out — whether for inquiries, a chat, or job opportunities.',
@@ -211,7 +214,10 @@ const i18n = {
         section_education: 'การศึกษา',
         section_certifications: 'ใบรับรอง',
         section_awards: 'รางวัล',
-        section_skills: 'ทักษะ',
+        section_qa_skill: 'ทักษะ QA',
+        section_dev_skill: 'ทักษะ Software Development',
+        section_qa_tools: 'เครื่องมือ QA',
+        section_dev_tools: 'เครื่องมือ Software Development',
         section_projects: 'โปรเจค',
         contact_heading: 'ติดต่อ',
         contact_intro: 'ไม่ว่าจะสอบถาม พูดคุย หรือติดต่องาน ยินดีรับทุกข้อความเลยครับ',
@@ -398,10 +404,11 @@ async function loadAll() {
         initSearch();
         applyFilters();
         renderSkills(mockData.skills);
+        renderTools(mockData.tools);
         return;
     }
 
-    try { renderProfile(getSheetData(workbook, 'Profile')[0] || {}); } catch(e) { console.error('Profile:', e); }
+    try { renderProfile(getSheetData(workbook, 'Profile')[0] || {}); } catch (e) { console.error('Profile:', e); }
 
     try {
         const projectRows = getSheetData(workbook, 'Project');
@@ -411,21 +418,21 @@ async function loadAll() {
         updateTabCounts();
         initSearch();
         applyFilters();
-    } catch(e) { console.error('Projects:', e); }
+    } catch (e) { console.error('Projects:', e); }
 
     try {
         const pgRows = getSheetData(workbook, 'Playground');
         allPlayground = pgRows.filter(row => String(row['Project name'] || '').trim());
         initPlaygroundSearch();
         applyPlaygroundFilters();
-    } catch(e) { console.error('Playground:', e); }
+    } catch (e) { console.error('Playground:', e); }
 
-    try { renderExperience(getSheetData(workbook, 'Experience')); } catch(e) { console.error('Experience:', e); }
-    try { renderEducation(getSheetData(workbook, 'Education')); } catch(e) { console.error('Education:', e); }
-    try { renderCertifications(getSheetData(workbook, 'Certifications')); } catch(e) { console.error('Certifications:', e); }
-    try { renderAwards(getSheetData(workbook, 'Awards')); } catch(e) { console.error('Awards:', e); }
-    try { renderSkills(getSheetData(workbook, 'Skills')); } catch(e) { console.error('Skills:', e); }
-    try { renderTools(getSheetData(workbook, 'Tools')); } catch(e) { console.error('Tools:', e); }
+    try { renderExperience(getSheetData(workbook, 'Experience')); } catch (e) { console.error('Experience:', e); }
+    try { renderEducation(getSheetData(workbook, 'Education')); } catch (e) { console.error('Education:', e); }
+    try { renderCertifications(getSheetData(workbook, 'Certifications')); } catch (e) { console.error('Certifications:', e); }
+    try { renderAwards(getSheetData(workbook, 'Awards')); } catch (e) { console.error('Awards:', e); }
+    try { renderSkills(getSheetData(workbook, 'Skills')); } catch (e) { console.error('Skills:', e); }
+    try { renderTools(getSheetData(workbook, 'Tools')); } catch (e) { console.error('Tools:', e); }
 }
 
 // ── Profile ───────────────────────────────────────────────
@@ -443,13 +450,13 @@ function renderProfile(profile) {
     titleEl.textContent = title;
     titleEl.style.display = title ? '' : 'none';
 
-    document.getElementById('home-intro').textContent = pickLang(profile, 'Intro') || pickLang(profile, 'Bio');
+    document.getElementById('home-intro').textContent = normalizeLines(pickLang(profile, 'Intro') || pickLang(profile, 'Bio') || '');
 
     const photo = document.getElementById('home-photo');
     if (profile.Photo_URL) photo.src = profile.Photo_URL;
     else photo.style.display = 'none';
 
-    document.getElementById('about-bio').textContent = pickLang(profile, 'Bio') || pickLang(profile, 'Intro');
+    document.getElementById('about-bio').textContent = normalizeLines(pickLang(profile, 'Bio') || pickLang(profile, 'Intro') || '');
     const loc = pickLang(profile, 'Location');
     document.getElementById('about-location').textContent = loc ? `📍 ${loc}` : '';
 }
@@ -457,11 +464,11 @@ function renderProfile(profile) {
 // ── Nav Guide (home page menu overview) ──────────────────
 
 const NAV_GUIDE_PAGES = [
-    { id: 'about',      icon: '👤', key: 'guide_about' },
-    { id: 'projects',   icon: '💼', key: 'guide_projects' },
+    { id: 'about', icon: '👤', key: 'guide_about' },
+    { id: 'projects', icon: '💼', key: 'guide_projects' },
     { id: 'playground', icon: '🧪', key: 'guide_playground' },
-    { id: 'join',       icon: '🤝', key: 'guide_join' },
-    { id: 'contact',    icon: '✉️',  key: 'guide_contact' },
+    { id: 'join', icon: '🤝', key: 'guide_join' },
+    { id: 'contact', icon: '✉️', key: 'guide_contact' },
 ];
 
 function renderNavGuide() {
@@ -606,7 +613,7 @@ function renderRecentProjects() {
             <div class="recent-info">
                 <h4>${escapeHtml(pickLang(project, 'Project name') || '')}</h4>
                 ${project.Duration ? `<p class="recent-duration">${escapeHtml(project.Duration)}</p>` : ''}
-                <p class="recent-overview">${escapeHtml(pickLang(project, 'Project overview') || '')}</p>
+                <p class="recent-overview">${escapeHtml(normalizeLines(pickLang(project, 'Project overview') || '').replace(/\n/g, ' '))}</p>
             </div>
         `;
         card.onclick = () => navigate('projects');
@@ -645,7 +652,7 @@ function renderProjectInfoPopup() {
 }
 
 function initProjectInfoPopup() {
-    const btn   = document.getElementById('project-info-btn');
+    const btn = document.getElementById('project-info-btn');
     const popup = document.getElementById('project-info-popup');
     const close = popup?.querySelector('.info-popup-close');
     if (!btn || !popup) return;
@@ -800,8 +807,8 @@ function buildProjectCard(project, showCatBadge) {
     `;
 
     const overview = pickLang(project, 'Project overview');
-    const roles    = pickLang(project, 'Roles and Responsibility');
-    const tools    = project['Skills and Tools'];
+    const roles = pickLang(project, 'Roles and Responsibility');
+    const tools = project['Skills and Tools'];
 
     const right = document.createElement('div');
     right.className = 'project-right';
@@ -910,126 +917,156 @@ function renderPlayground() {
 
 function renderSkills(data) {
     _skillsData = data;
-    const container = document.getElementById('skills-list');
-    if (!container) return;
-    container.innerHTML = '';
+    const qaContainer = document.getElementById('qa-skill-list');
+    const devContainer = document.getElementById('dev-skill-list');
+    if (!qaContainer && !devContainer) return;
 
     const levelKeys = { 5: 'level_expert', 4: 'level_advanced', 3: 'level_intermediate', 2: 'level_beginner', 1: 'level_beginner' };
-    const levelCss  = { 5: 'expert', 4: 'advanced', 3: 'intermediate', 2: 'beginner', 1: 'beginner' };
+    const levelCss = { 5: 'expert', 4: 'advanced', 3: 'intermediate', 2: 'beginner', 1: 'beginner' };
     const levelOrder = [5, 4, 3, 2, 1];
 
-    const groups = {};
-    data.forEach(skill => {
-        const lvl = parseInt(skill.Level) || 0;
-        const key = levelKeys[lvl] || 'level_beginner';
-        if (!groups[key]) groups[key] = [];
-        groups[key].push(pickLang(skill, 'Skill_Name'));
-    });
-
-    const groupsEl = document.createElement('div');
-    groupsEl.className = 'skills-groups';
-
-    const seen = new Set();
-    levelOrder.forEach(lvl => {
-        const key = levelKeys[lvl];
-        if (seen.has(key) || !groups[key]) return;
-        seen.add(key);
-
-        const row = document.createElement('div');
-        row.className = 'skill-level-group';
-        const badge = document.createElement('span');
-        badge.className = `skill-level-label skill-level--${levelCss[lvl]}`;
-        badge.textContent = t(key);
-        const tagsEl = document.createElement('div');
-        tagsEl.className = 'skill-tags';
-        groups[key].forEach(name => {
-            const tag = document.createElement('span');
-            tag.className = 'skill-tag';
-            tag.textContent = name;
-            tagsEl.appendChild(tag);
+    function buildSkillGroup(skills) {
+        const groups = {};
+        skills.forEach(skill => {
+            const lvl = parseInt(skill.Level) || 0;
+            const key = levelKeys[lvl] || 'level_beginner';
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(pickLang(skill, 'Skill_Name'));
         });
-        row.append(badge, tagsEl);
-        groupsEl.appendChild(row);
-    });
 
-    container.appendChild(groupsEl);
+        const groupsEl = document.createElement('div');
+        groupsEl.className = 'skills-groups';
+
+        const seen = new Set();
+        levelOrder.forEach(lvl => {
+            const key = levelKeys[lvl];
+            if (seen.has(key) || !groups[key]) return;
+            seen.add(key);
+
+            const row = document.createElement('div');
+            row.className = 'skill-level-group';
+            const badge = document.createElement('span');
+            badge.className = `skill-level-label skill-level--${levelCss[lvl]}`;
+            badge.textContent = t(key);
+            const tagsEl = document.createElement('div');
+            tagsEl.className = 'skill-tags';
+            groups[key].forEach(name => {
+                const tag = document.createElement('span');
+                tag.className = 'skill-tag';
+                tag.textContent = name;
+                tagsEl.appendChild(tag);
+            });
+            row.append(badge, tagsEl);
+            groupsEl.appendChild(row);
+        });
+
+        return groupsEl;
+    }
+
+    // Split by Domain
+    const qaSkills = data.filter(s => String(s.Domain || '').trim().toLowerCase() === 'qa');
+    const devSkills = data.filter(s => String(s.Domain || '').trim().toLowerCase() === 'software development');
+
+    if (qaContainer) {
+        qaContainer.innerHTML = '';
+        qaContainer.appendChild(buildSkillGroup(qaSkills));
+    }
+    if (devContainer) {
+        devContainer.innerHTML = '';
+        devContainer.appendChild(buildSkillGroup(devSkills));
+    }
 }
 
 // ── Tools ─────────────────────────────────────────────────
 
 const TOOL_CAT_ORDER = [
     ['Test Management', 'tool_cat_test_management'],
-    ['Automation',      'tool_cat_automation'],
-    ['API Testing',     'tool_cat_api'],
-    ['Performance',     'tool_cat_performance'],
-    ['CI/CD',           'tool_cat_cicd'],
+    ['Automation', 'tool_cat_automation'],
+    ['API Testing', 'tool_cat_api'],
+    ['Performance', 'tool_cat_performance'],
+    ['CI/CD', 'tool_cat_cicd'],
     ['Version Control', 'tool_cat_vcs'],
-    ['Database',        'tool_cat_database'],
-    ['Monitoring',      'tool_cat_monitoring'],
-    ['Collaboration',   'tool_cat_collaboration'],
+    ['Database', 'tool_cat_database'],
+    ['Monitoring', 'tool_cat_monitoring'],
+    ['Collaboration', 'tool_cat_collaboration'],
     ['Device / Platform', 'tool_cat_device'],
 ];
 
 function renderTools(data) {
     _toolsData = data;
     console.log('[renderTools] called, rows:', data.length);
-    const container = document.getElementById('tools-list');
-    if (!container) { console.warn('[renderTools] container not found'); return; }
-    container.innerHTML = '';
+    const qaContainer = document.getElementById('qa-tools-list');
+    const devContainer = document.getElementById('dev-tools-list');
+    if (!qaContainer && !devContainer) { console.warn('[renderTools] containers not found'); return; }
 
-    const groups = {};
-    data.forEach(row => {
-        const cat = String(row['Category'] || '').trim();
-        const name = String(row['Tool_Name'] || '').trim();
-        if (!cat || !name) return;
-        if (!groups[cat]) groups[cat] = [];
-        groups[cat].push(name);
-    });
-
-    const groupsEl = document.createElement('div');
-    groupsEl.className = 'skills-groups';
-
-    const rendered = new Set();
-    TOOL_CAT_ORDER.forEach(([cat, i18nKey]) => {
-        if (!groups[cat]) return;
-        rendered.add(cat);
-        const row = document.createElement('div');
-        row.className = 'skill-level-group';
-        const badge = document.createElement('span');
-        badge.className = 'skill-level-label skill-level--tool';
-        badge.textContent = t(i18nKey);
-        const tagsEl = document.createElement('div');
-        tagsEl.className = 'skill-tags';
-        groups[cat].forEach(name => {
-            const tag = document.createElement('span');
-            tag.className = 'skill-tag';
-            tag.textContent = name;
-            tagsEl.appendChild(tag);
+    function buildToolGroup(rows) {
+        const groups = {};
+        rows.forEach(row => {
+            const cat = String(row['Category'] || '').trim();
+            const name = String(row['Tool_Name'] || '').trim();
+            if (!cat || !name) return;
+            if (!groups[cat]) groups[cat] = [];
+            groups[cat].push(name);
         });
-        row.append(badge, tagsEl);
-        groupsEl.appendChild(row);
-    });
 
-    // fallback: categories not in TOOL_CAT_ORDER
-    Object.keys(groups).filter(c => !rendered.has(c)).forEach(cat => {
-        const row = document.createElement('div');
-        row.className = 'skill-level-group';
-        const badge = document.createElement('span');
-        badge.className = 'skill-level-label skill-level--tool';
-        badge.textContent = cat;
-        const tagsEl = document.createElement('div');
-        tagsEl.className = 'skill-tags';
-        groups[cat].forEach(name => {
-            const tag = document.createElement('span');
-            tag.className = 'skill-tag';
-            tag.textContent = name;
-            tagsEl.appendChild(tag);
+        const groupsEl = document.createElement('div');
+        groupsEl.className = 'skills-groups';
+
+        const rendered = new Set();
+        TOOL_CAT_ORDER.forEach(([cat, i18nKey]) => {
+            if (!groups[cat]) return;
+            rendered.add(cat);
+            const row = document.createElement('div');
+            row.className = 'skill-level-group';
+            const badge = document.createElement('span');
+            badge.className = 'skill-level-label skill-level--tool';
+            badge.textContent = t(i18nKey);
+            const tagsEl = document.createElement('div');
+            tagsEl.className = 'skill-tags';
+            groups[cat].forEach(name => {
+                const tag = document.createElement('span');
+                tag.className = 'skill-tag';
+                tag.textContent = name;
+                tagsEl.appendChild(tag);
+            });
+            row.append(badge, tagsEl);
+            groupsEl.appendChild(row);
         });
-        row.append(badge, tagsEl);
-        groupsEl.appendChild(row);
-    });
 
-    container.appendChild(groupsEl);
+        // fallback: categories not in TOOL_CAT_ORDER
+        Object.keys(groups).filter(c => !rendered.has(c)).forEach(cat => {
+            const row = document.createElement('div');
+            row.className = 'skill-level-group';
+            const badge = document.createElement('span');
+            badge.className = 'skill-level-label skill-level--tool';
+            badge.textContent = cat;
+            const tagsEl = document.createElement('div');
+            tagsEl.className = 'skill-tags';
+            groups[cat].forEach(name => {
+                const tag = document.createElement('span');
+                tag.className = 'skill-tag';
+                tag.textContent = name;
+                tagsEl.appendChild(tag);
+            });
+            row.append(badge, tagsEl);
+            groupsEl.appendChild(row);
+        });
+
+        return groupsEl;
+    }
+
+    // Split by Domain
+    const qaTools = data.filter(row => String(row.Domain || '').trim().toLowerCase() === 'qa');
+    const devTools = data.filter(row => String(row.Domain || '').trim().toLowerCase() === 'software development');
+
+    if (qaContainer) {
+        qaContainer.innerHTML = '';
+        qaContainer.appendChild(buildToolGroup(qaTools));
+    }
+    if (devContainer) {
+        devContainer.innerHTML = '';
+        devContainer.appendChild(buildToolGroup(devTools));
+    }
 }
 
 // ── Media / Gallery ───────────────────────────────────────

@@ -31,22 +31,110 @@ const mockData = {
     ],
     skills: [
         {
+            Skill_Name: "Test Planning",
+            Category: "QA",
+            Level: "5",
+            Description: "วางแผนการทดสอบและเขียน test case",
+            Domain: "QA"
+        },
+        {
+            Skill_Name: "Manual Testing",
+            Category: "QA",
+            Level: "5",
+            Description: "ทดสอบซอฟต์แวร์ด้วยตนเอง",
+            Domain: "QA"
+        },
+        {
+            Skill_Name: "Bug Reporting",
+            Category: "QA",
+            Level: "4",
+            Description: "รายงานและติดตาม bug ผ่านเครื่องมือ",
+            Domain: "QA"
+        },
+        {
+            Skill_Name: "Automation Testing",
+            Category: "QA",
+            Level: "3",
+            Description: "เขียนสคริปต์ทดสอบอัตโนมัติ",
+            Domain: "QA"
+        },
+        {
             Skill_Name: "JavaScript",
             Category: "Programming",
             Level: "5",
-            Description: "ภาษาหลักสำหรับ frontend"
+            Description: "ภาษาหลักสำหรับ frontend",
+            Domain: "Software Development"
         },
         {
             Skill_Name: "React",
             Category: "Framework",
             Level: "4",
-            Description: "สร้าง UI แบบ interactive"
+            Description: "สร้าง UI แบบ interactive",
+            Domain: "Software Development"
         },
         {
             Skill_Name: "Python",
             Category: "Programming",
             Level: "3",
-            Description: "สำหรับงาน backend และ scripting"
+            Description: "สำหรับงาน backend และ scripting",
+            Domain: "Software Development"
+        }
+    ],
+    tools: [
+        {
+            Tool_Name: "JIRA",
+            Category: "Test Management",
+            Domain: "QA"
+        },
+        {
+            Tool_Name: "TestRail",
+            Category: "Test Management",
+            Domain: "QA"
+        },
+        {
+            Tool_Name: "Selenium",
+            Category: "Automation",
+            Domain: "QA"
+        },
+        {
+            Tool_Name: "Postman",
+            Category: "API Testing",
+            Domain: "QA"
+        },
+        {
+            Tool_Name: "JMeter",
+            Category: "Performance",
+            Domain: "QA"
+        },
+        {
+            Tool_Name: "Charles Proxy",
+            Category: "Device / Platform",
+            Domain: "QA"
+        },
+        {
+            Tool_Name: "Git",
+            Category: "Version Control",
+            Domain: "Software Development"
+        },
+        {
+            Tool_Name: "VS Code",
+            Category: "Collaboration",
+            Domain: "Software Development"
+        },
+        {
+            Tool_Name: "Docker",
+            Category: "CI/CD",
+            Domain: "Software Development"
+        },
+        {
+            Tool_Name: "MongoDB",
+            Category: "Database",
+            Domain: "Software Development"
+        },
+        {
+            Tool_Name: "Figma",
+            Category: "Collaboration",
+            Domain: "Software Development"
         }
     ],
     contact: [

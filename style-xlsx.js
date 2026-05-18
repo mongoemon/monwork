@@ -33,7 +33,7 @@ const COL_WIDTHS = {
         Title_TH: 35, Intro_TH: 60, Bio_TH: 60, Location_TH: 22, Name_TH: 25,
     },
     Skills: {
-        Skill_Name: 28, Category: 22, Level: 8,
+        Skill_Name: 28, Category: 22, Level: 8, Domain: 22,
         Skill_Name_TH: 28, Category_TH: 22,
     },
     Project: {
@@ -61,7 +61,7 @@ const COL_WIDTHS = {
         Title: 35, Project: 30, Year: 8, Place: 20,
     },
     Tools: {
-        Tool_Name: 30, Category: 28,
+        Tool_Name: 30, Category: 28, Domain: 22,
     },
     Playground: {
         'Project name': 32, 'Project name_TH': 32, Duration: 22, 'Project URL': 40,
@@ -126,7 +126,7 @@ async function run() {
         if (lastCol > 0) {
             ws.autoFilter = {
                 from: { row: 1, column: 1 },
-                to:   { row: 1, column: lastCol },
+                to: { row: 1, column: lastCol },
             };
         }
 
@@ -148,7 +148,8 @@ async function run() {
 
                 if (normalized.includes('\n')) {
                     if (!cell.alignment) cell.alignment = {};
-                    cell.alignment = { ...cell.alignment, wrapText: true, vertical: 'top' };
+                    cell.alignment.wrapText = true;
+                    if (cell.alignment.vertical === undefined) cell.alignment.vertical = 'top';
                     rowHasWrap = true;
                 }
             });
