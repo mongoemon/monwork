@@ -7,12 +7,19 @@ const siteConfig = {
      * - 'contact' hides the Contact nav link (the form on home stays visible)
      */
     pages: {
-        about:      true,
-        projects:   true,
+        about: true,
+        projects: true,
         playground: true,
-        join:       true,
-        contact:    false,
+        join: true,
+        contact: false,
     },
+
+    /*
+     * Microsoft Clarity project ID for visitor analytics (heatmaps, session recordings).
+     * Get yours at https://clarity.microsoft.com/ — replace the placeholder below.
+     * Set to null or empty string to disable Clarity entirely.
+     */
+    clarityId: 'wtfvkk0n07',
 
     /*
      * Number of months without a GitHub push before the stale warning appears
@@ -32,7 +39,7 @@ const siteConfig = {
      */
     projectCategories: [
         { value: 'Software', en: 'Software', th: 'ซอฟต์แวร์' },
-        { value: 'Game',     en: 'Game',     th: 'เกม'       },
-        { value: 'etc.',     en: 'etc.',     th: 'อื่นๆ'     },
+        { value: 'Game', en: 'Game', th: 'เกม' },
+        { value: 'etc.', en: 'etc.', th: 'อื่นๆ' },
     ],
 };

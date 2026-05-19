@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noppon Mongkonnimit — Portfolio</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Microsoft Clarity tracking -->
+    <script type="text/javascript">
+        (function (c, l, a, r, i, t, y) {
+            c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+            t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+        })(window, document, "clarity", "script", "wtfvkk0n07");
+    </script>
 </head>
+
 <body>
     <div id="loading-overlay">
         <div class="loading-box">
@@ -53,10 +63,12 @@
             <div class="home-contact" id="contact">
                 <div class="home-contact-intro">
                     <h3 data-i18n="contact_heading">Get in Touch</h3>
-                    <p data-i18n="contact_intro">Feel free to reach out — whether for inquiries, a chat, or job opportunities.</p>
+                    <p data-i18n="contact_intro">Feel free to reach out — whether for inquiries, a chat, or job
+                        opportunities.</p>
                 </div>
                 <div class="home-contact-card">
-                    <div data-fs-success class="cf-success" data-i18n="contact_success">Message sent — I'll get back to you soon!</div>
+                    <div data-fs-success class="cf-success" data-i18n="contact_success">Message sent — I'll get back to
+                        you soon!</div>
                     <div data-fs-error class="cf-form-error"></div>
                     <form id="contact-form">
                         <div class="form-row">
@@ -65,9 +77,8 @@
                                     <span data-i18n="contact_name">Name</span>
                                     <span class="form-required">*</span>
                                 </label>
-                                <input type="text" id="cf-name" name="name" required
-                                    placeholder="Your name" autocomplete="name"
-                                    data-fs-field data-i18n-placeholder="contact_name_ph">
+                                <input type="text" id="cf-name" name="name" required placeholder="Your name"
+                                    autocomplete="name" data-fs-field data-i18n-placeholder="contact_name_ph">
                                 <span data-fs-error="name" class="field-error"></span>
                             </div>
                             <div class="form-group">
@@ -75,9 +86,8 @@
                                     <span data-i18n="contact_email">Email</span>
                                     <span class="form-required">*</span>
                                 </label>
-                                <input type="email" id="cf-email" name="email" required
-                                    placeholder="your@email.com" autocomplete="email"
-                                    data-fs-field data-i18n-placeholder="contact_email_ph">
+                                <input type="email" id="cf-email" name="email" required placeholder="your@email.com"
+                                    autocomplete="email" data-fs-field data-i18n-placeholder="contact_email_ph">
                                 <span data-fs-error="email" class="field-error"></span>
                             </div>
                         </div>
@@ -85,8 +95,7 @@
                             <label for="cf-subject">
                                 <span data-i18n="contact_subject">Subject</span>
                             </label>
-                            <input type="text" id="cf-subject" name="subject"
-                                placeholder="What's this about?"
+                            <input type="text" id="cf-subject" name="subject" placeholder="What's this about?"
                                 data-i18n-placeholder="contact_subject_ph">
                         </div>
                         <div class="form-group">
@@ -94,8 +103,7 @@
                                 <span data-i18n="contact_message">Message</span>
                                 <span class="form-required">*</span>
                             </label>
-                            <textarea id="cf-message" name="message" rows="5" required
-                                placeholder="Your message…"
+                            <textarea id="cf-message" name="message" rows="5" required placeholder="Your message…"
                                 data-fs-field data-i18n-placeholder="contact_message_ph"></textarea>
                             <span data-fs-error="message" class="field-error"></span>
                         </div>
@@ -164,8 +172,7 @@
                 <!-- additional tabs injected by script.js from siteConfig.projectCategories -->
             </div>
             <div class="search-bar">
-                <input type="text" id="project-search"
-                    placeholder="Search by name, tools, or description…"
+                <input type="text" id="project-search" placeholder="Search by name, tools, or description…"
                     data-i18n-placeholder="search_ph" autocomplete="off">
                 <span id="search-count"></span>
             </div>
@@ -180,8 +187,7 @@
             <h2 data-i18n="section_playground">Playground</h2>
             <p class="section-desc" data-i18n="playground_desc"></p>
             <div class="search-bar">
-                <input type="text" id="playground-search"
-                    placeholder="Search projects…"
+                <input type="text" id="playground-search" placeholder="Search projects…"
                     data-i18n-placeholder="playground_search_ph" autocomplete="off">
                 <span id="playground-search-count"></span>
             </div>
@@ -212,9 +218,8 @@
                                 <span data-i18n="join_name">First Name</span>
                                 <span class="form-required">*</span>
                             </label>
-                            <input type="text" id="jf-name" name="name" required
-                                autocomplete="given-name"
-                                data-fs-field data-i18n-placeholder="join_name_ph">
+                            <input type="text" id="jf-name" name="name" required autocomplete="given-name" data-fs-field
+                                data-i18n-placeholder="join_name_ph">
                             <span data-fs-error="name" class="field-error"></span>
                         </div>
                         <div class="form-group">
@@ -231,8 +236,7 @@
                                 <span data-i18n="join_dob">Date of Birth</span>
                                 <span class="form-required">*</span>
                             </label>
-                            <input type="date" id="jf-dob" name="date_of_birth" required
-                                data-fs-field>
+                            <input type="date" id="jf-dob" name="date_of_birth" required data-fs-field>
                             <span data-fs-error="date_of_birth" class="field-error"></span>
                         </div>
                         <div class="form-group">
@@ -240,9 +244,8 @@
                                 <span data-i18n="join_phone">Phone Number</span>
                                 <span class="form-required">*</span>
                             </label>
-                            <input type="tel" id="jf-phone" name="phone" required
-                                autocomplete="tel"
-                                data-fs-field data-i18n-placeholder="join_phone_ph">
+                            <input type="tel" id="jf-phone" name="phone" required autocomplete="tel" data-fs-field
+                                data-i18n-placeholder="join_phone_ph">
                             <span data-fs-error="phone" class="field-error"></span>
                         </div>
                     </div>
@@ -250,8 +253,7 @@
                         <label for="jf-links">
                             <span data-i18n="join_links">Related Links</span>
                         </label>
-                        <textarea id="jf-links" name="links" rows="3"
-                            data-i18n-placeholder="join_links_ph"></textarea>
+                        <textarea id="jf-links" name="links" rows="3" data-i18n-placeholder="join_links_ph"></textarea>
                     </div>
                     <div class="form-group">
                         <label>
@@ -287,4 +289,5 @@
     </script>
     <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 </body>
+
 </html>

@@ -9,7 +9,7 @@ portfolio4/
 ├── index.html              # โครงสร้างหน้าเว็บ
 ├── style.css               # สไตล์ทั้งหมด
 ├── script.js               # logic หลัก (navigation, render, i18n, gallery)
-├── config.js               # ตั้งค่า page visibility และ nav order
+├── config.js               # ตั้งค่า page visibility, nav order, และ Clarity ID
 ├── data.js                 # mock data สำรอง (ใช้ถ้า data.xlsx โหลดไม่ได้)
 ├── data.xlsx               # แหล่งข้อมูลหลัก (ดูรายละเอียด sheet ด้านล่าง)
 ├── images/
@@ -75,6 +75,48 @@ const siteConfig = {
 - **Pagination** — Projects แสดง 6 รายการต่อหน้า
 - **Search** — ค้นหาได้จากชื่อ, tools, overview
 - **Last updated** — แสดงวันที่ push ล่าสุดจาก GitHub ท้ายหน้าแรก พร้อมข้อความแจ้งเตือนถ้าไม่มีการอัพเดทเกินกำหนด (ตั้งค่าได้ใน `config.js`)
+
+## Microsoft Clarity
+
+เว็บนี้ใช้ [Microsoft Clarity](https://clarity.microsoft.com/) สำหรับวิเคราะห์ visitor (heatmaps, session recordings) — ฟรี ไม่มีค่าใช้จ่าย
+
+### การตั้งค่า
+
+1. สร้าง project ที่ [clarity.microsoft.com](https://clarity.microsoft.com/) (ใช้ Microsoft/GitHub/Google account login)
+2. ได้ Project ID มา (เป็น alphanumeric string)
+3. แก้ `clarityId` ใน `config.js`:
+   ```js
+   clarityId: 'YOUR_CLARITY_PROJECT_ID',  // ← ใส่ ID จริงตรงนี้
+   ```
+4. (Optional) ตั้งเป็น `null` หรือ `''` เพื่อปิด Clarity
+
+ตัว tracking script อยู่ใน `index.html` ใน `<head>` เรียบร้อยแล้ว เปลี่ยนแค่ `clarityId` ใน `config.js` ก็พอ
+
+### สิ่งที่ Clarity เก็บ
+
+- Heatmaps (click/tap, scroll)
+- Session recordings (anonymous — ไม่เก็บข้อมูลส่วนตัว)
+- Browser, device, country, OS metrics
+- ไม่เก็บ password, credit card, หรือข้อมูลใน input fields
+
+### Privacy
+
+Clarity จะ mask ข้อมูล sensitive (input fields) โดยอัตโนมัติ และเป็นไปตาม [Microsoft Privacy Statement](https://privacy.microsoft.com/)
+
+### การดู Dashboard
+
+1. ไปที่ [clarity.microsoft.com](https://clarity.microsoft.com/) แล้ว sign in
+2. เลือก project **Noppon Portfolio** จาก dashboard
+3. หรือเข้าลิงก์ตรง: `https://clarity.microsoft.com/projects/view/wtfvkk0n07/`
+
+**Dashboard หลัก** แสดง:
+- **Overview** — จำนวน session, unique users, bounce rate, avg session time
+- **Heatmaps** — จุดที่คน click/tap และ scroll มากที่สุดในแต่ละหน้า
+- **Recordings** — session recordings (เล่นซ้ำการใช้งานจริงของ visitor)
+- **Insights** — สรุปสถิติที่ Clarity วิเคราะห์ให้อัตโนมัติ เช่น rage clicks, dead clicks
+- **Settings** → **IP blocking** — กันไม่ให้เก็บ session ของตัวเอง (แนะนำให้ block IP ของคุณ)
+
+> **Tip:** ข้อมูลใช้เวลา 1–2 ชั่วโมงหลัง deploy กว่าจะเริ่มแสดงบน dashboard
 
 ## Line break ใน Excel
 
