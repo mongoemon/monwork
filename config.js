@@ -1,4 +1,4 @@
-const siteConfig = {
+var siteConfig = {
     /*
      * Set to false to hide a section.
      * - Removes the nav link
@@ -7,6 +7,7 @@ const siteConfig = {
      * - 'contact' hides the Contact nav link (the form on home stays visible)
      */
     pages: {
+        home: false,
         about: true,
         projects: true,
         playground: true,
