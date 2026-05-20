@@ -69,7 +69,6 @@ portfolio4/
 ├── config.js                 ← Site configuration: pages, sub-sections, categories, custom pages.
 ├── data.js                   ← Fallback mock data used when data.xlsx fails to load.
 ├── data.xlsx                 ← PRIMARY data source. Edit this for all content changes.
-├── wizard.html               ← Config wizard — open in browser to generate a new config.js.
 │
 ├── js/                       ← ES module source (loaded by index.html as type="module")
 │   ├── main.js               ← Entry point — initialises everything.
@@ -123,7 +122,6 @@ All scripts below live in the project root and are run with `node <script>`. Non
 | `config.js` | Site config: page visibility, sub-section visibility, nav order, custom pages, category tabs. |
 | `data.js` | Fallback mock data rendered when `data.xlsx` fails to load (e.g. no local server). |
 | `data.xlsx` | **Primary data source.** Contains all real content across ten sheets. |
-| `wizard.html` | Visual config wizard — open it in a browser to generate a new `config.js`. |
 
 ### Data file
 
@@ -470,45 +468,9 @@ This rewrites the `Project_Category` column in `data.xlsx` for all rows.
 
 ---
 
-## Config Wizard
-
-`wizard.html` is a browser-based GUI for generating `config.js`. Use it instead of editing `config.js` by hand.
-
-### Running the wizard
-
-The wizard loads your current `config.js` automatically, so it must be served from a local HTTP server (same requirement as the main site):
-
-```bash
-# from the portfolio4/ folder
-python -m http.server 8080
-# or
-npx serve .
-```
-
-Then open **`http://localhost:8080/wizard.html`** in your browser.
-
-### Wizard steps
-
-| Step | What you configure |
-|---|---|
-| **1 — Pages** | Toggle each page on or off. Drag rows up/down to set the nav order. |
-| **2 — Sub-sections** | For pages that have sub-sections (Home, About), individually toggle blocks like Experience, Education, Skills, and Tools. |
-| **3 — Xlsx Mapping** | Read-only table showing which xlsx sheet feeds each section. Active sections are green; inactive are grayed out. Custom pages you defined also appear here. |
-| **4 — Categories** | Add, edit, or remove the filter tabs on the Projects page. The **Value** column must match `Project_Category` in `data.xlsx` exactly. |
-| **5 — Custom Pages** | Define new pages not in the built-in set. Each custom page loads rows from a named xlsx sheet and renders them as cards. |
-| **6 — Export** | Preview the generated `config.js`. Click **Download config.js** or **Copy to Clipboard**, then replace the existing file in `portfolio4/`. |
-
-### Applying the exported config
-
-1. Download `config.js` from step 6.
-2. Drop it into `portfolio4/`, replacing the existing file.
-3. Reload `index.html` in your browser — changes take effect immediately (no build step).
-
----
-
 ## Controlling Which Pages Are Visible
 
-The easiest way is to use the [Config Wizard](#config-wizard). To edit `config.js` by hand:
+Edit `config.js` directly:
 
 ```js
 var siteConfig = {
@@ -559,7 +521,7 @@ var siteConfig = {
 };
 ```
 
-Any sub-section key set to `false` is hidden with `display:none` — its data is still loaded, it just doesn't render. The wizard (Step 2) is the easiest way to configure this.
+Any sub-section key set to `false` is hidden with `display:none` — its data is still loaded, it just doesn't render.
 
 ---
 
@@ -567,25 +529,39 @@ Any sub-section key set to `false` is hidden with `display:none` — its data is
 
 Custom pages let you add a new section to the site backed by a new sheet in `data.xlsx`. No changes to `index.html` or the `js/` modules are needed.
 
-### Step 1 — Add the custom page in the wizard
+### Step 1 — Add the custom page in `config.js`
 
-Open the wizard and go to **Step 5 — Custom Pages**. Click **Add Custom Page** and fill in:
+Add an entry to the `customPages` array in `config.js`:
+
+```js
+customPages: [
+    {
+        id:        'blog',
+        label:     { en: 'Blog', th: 'บล็อก' },
+        xlsxSheet: 'Blog',
+        fields: {
+            title:       'Title',
+            date:        'Date',
+            description: 'Summary',
+            link:        'URL',
+        },
+    },
+],
+```
 
 | Field | What it does |
 |---|---|
-| **Page ID** | Used as the URL hash and the `id` attribute of the injected `<section>`. No spaces; lowercase recommended (e.g. `blog`). |
-| **Xlsx Sheet Name** | The name of the sheet to load from `data.xlsx` (e.g. `Blog`). Case-sensitive. |
-| **Nav Label (EN / TH)** | Text shown in the nav bar in each language. |
-| **Title Column** | The column in the sheet whose value becomes the card heading. |
-| **Description Column** | The column shown as the card body text. |
-| **Date Column** | Optional. Shown below the heading. |
-| **Link Column** | Optional. Shown as a "View →" link. |
-
-Export `config.js` from Step 6 and drop it into `portfolio4/`.
+| `id` | Used as the URL hash and the `id` attribute of the injected `<section>`. No spaces; lowercase recommended. |
+| `label.en` / `label.th` | Text shown in the nav bar in each language. |
+| `xlsxSheet` | The name of the sheet to load from `data.xlsx`. Case-sensitive. |
+| `fields.title` | Column whose value becomes the card heading. |
+| `fields.description` | Column shown as the card body text. Optional. |
+| `fields.date` | Column shown below the heading. Optional. |
+| `fields.link` | Column rendered as a "View →" link. Optional. |
 
 ### Step 2 — Add the sheet to data.xlsx
 
-Open `data.xlsx` and add a new sheet tab whose name matches the **Xlsx Sheet Name** you set in the wizard exactly (case-sensitive). Add column headers in row 1. The column names must match what you entered in the wizard's field mapping.
+Open `data.xlsx` and add a new sheet tab whose name matches the `xlsxSheet` value you set in `config.js` exactly (case-sensitive). Add column headers in row 1. The column names must match the `fields` mapping you configured.
 
 Example for a `Blog` sheet:
 
@@ -607,10 +583,10 @@ Reload `index.html`. The new section appears in the nav and renders cards from t
 
 The site detects the user's browser language automatically on first visit. If the browser reports Thai (`th`), the site switches to Thai. Otherwise it defaults to English. The user can also click the EN / TH buttons in the nav to override, and their choice is saved in `localStorage`.
 
-To add or edit UI strings (buttons, labels, headings), open `script.js` and find the `i18n` object near the top. It has two keys: `en` and `th`. Each key is an object of translation strings. Edit the values directly.
+To add or edit UI strings (buttons, labels, headings), open `js/i18n.js` and find the `i18n` object near the top. It has two keys: `en` and `th`. Each key is an object of translation strings. Edit the values directly.
 
 ```js
-const i18n = {
+export const i18n = {
     en: {
         nav_home: 'Home',
         // ...

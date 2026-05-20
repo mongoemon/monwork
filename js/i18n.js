@@ -199,6 +199,11 @@ export const i18n = {
     }
 };
 
+// Merge navLabel overrides from config (no-op if siteConfig doesn't set them)
+const _cfgLabels = (window.siteConfig || {}).navLabels || {};
+if (_cfgLabels.en) Object.assign(i18n.en, _cfgLabels.en);
+if (_cfgLabels.th) Object.assign(i18n.th, _cfgLabels.th);
+
 export function t(key) {
     return (i18n[state.lang] || i18n.en)[key] ?? i18n.en[key] ?? key;
 }

@@ -18,7 +18,9 @@ export function isSubSectionEnabled(pageId, sectionId) {
 export function applySubSectionConfig() {
     document.querySelectorAll('[data-subsection]').forEach(el => {
         const [pageId, sectionId] = el.getAttribute('data-subsection').split(':');
-        const visible = isPageEnabled(pageId) && isSubSectionEnabled(pageId, sectionId);
+        // home:false only removes the nav link — home content is always shown
+        const pageVisible = pageId === 'home' ? true : isPageEnabled(pageId);
+        const visible = pageVisible && isSubSectionEnabled(pageId, sectionId);
         el.style.display = visible ? '' : 'none';
     });
 

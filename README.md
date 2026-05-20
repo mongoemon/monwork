@@ -7,7 +7,6 @@
 ```
 portfolio4/
 ├── index.html              # โครงสร้างหน้าเว็บ
-├── wizard.html             # UI สำหรับตั้งค่าเว็บ (เปิดใน browser, export config.js)
 ├── style.css               # สไตล์ทั้งหมด (ใช้ CSS custom properties สำหรับ dark mode)
 ├── config.js               # ตั้งค่า page visibility, sub-sections, nav order, custom pages
 ├── data.js                 # mock data สำรอง (ใช้ถ้า data.xlsx โหลดไม่ได้)
@@ -35,29 +34,9 @@ portfolio4/
 └── categorize-projects.js  # กำหนด Project_Category ให้โปรเจคทั้งหมด
 ```
 
-## Config Wizard — ตั้งค่าเว็บแบบ UI
+## config.js — ตั้งค่า
 
-วิธีง่ายที่สุดในการตั้งค่าคือใช้ Wizard:
-
-1. รัน local server แล้วเปิด `http://localhost:8080/wizard.html`
-2. ตั้งค่าตามขั้นตอน 6 ขั้น (ดูรายละเอียดด้านล่าง)
-3. คลิก **Download config.js**
-4. นำไฟล์ที่ได้ไปแทน `config.js` เดิมในโฟลเดอร์ portfolio4
-
-| ขั้น | หัวข้อ | รายละเอียด |
-|------|--------|------------|
-| 1 | Pages | เปิด/ปิด page แต่ละหน้า + ลาก reorder ลำดับใน nav |
-| 2 | Sub-sections | เลือก sub-section ที่ต้องการแสดงในแต่ละ page |
-| 3 | Xlsx Mapping | กำหนดว่าแต่ละ sub-section อ่านข้อมูลจาก sheet ชื่ออะไร |
-| 4 | Categories | เพิ่ม/ลบ/แก้ไข project category (EN + TH) |
-| 5 | Custom Pages | เพิ่มหน้าใหม่ที่ดึงข้อมูลจาก xlsx sheet ที่กำหนดเอง |
-| 6 | Export | ดาวน์โหลด `config.js` ที่พร้อมใช้งาน |
-
----
-
-## config.js — ตั้งค่าด้วยมือ
-
-แก้ไขโดยตรงได้ถ้าไม่ต้องการใช้ wizard
+แก้ไขโดยตรงใน `config.js`
 
 ```js
 var siteConfig = {
@@ -144,7 +123,6 @@ var siteConfig = {
 - **SPA navigation** — สลับ section ด้วย hash routing ไม่โหลดหน้าใหม่
 - **Dark mode** — toggle ปุ่ม Dark/Light ในนาฟ ตรวจ system preference อัตโนมัติ บันทึกใน `localStorage`
 - **Bilingual (EN/TH)** — ตรวจ `navigator.language` อัตโนมัติ สลับด้วยปุ่ม EN/TH บันทึกใน `localStorage` รองรับ Experience, Skills, Tools, Projects, Profile
-- **Config Wizard** — UI สำหรับตั้งค่าเว็บ เปิด/ปิด page, จัดลำดับ nav, ควบคุม sub-section, เพิ่ม custom page ไม่ต้องแก้ code
 - **Page config** — เปิด/ปิด section, จัดลำดับ nav, ซ่อน sub-section เฉพาะส่วน ได้จาก `config.js` ไฟล์เดียว
 - **Custom Pages** — เพิ่มหน้าใหม่จาก xlsx sheet ใดก็ได้ แสดงเป็น card list อัตโนมัติ
 - **Join QA Team** — หน้าสมัครร่วมทีม มี form เก็บชื่อ, ชื่อเล่น, วันเกิด, เบอร์โทร, ลิงค์, และความสนใจ

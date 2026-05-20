@@ -79,7 +79,8 @@ export function renderLastUpdated(pushed) {
 
 export async function loadLastUpdated() {
     try {
-        const res = await fetch('https://api.github.com/repos/mongoemon/monwork');
+        const ghRepo = (window.siteConfig?.githubRepo || '').trim() || 'mongoemon/monwork';
+        const res = await fetch(`https://api.github.com/repos/${ghRepo}`);
         if (!res.ok) return;
         const json = await res.json();
         renderLastUpdated(new Date(json.pushed_at));
