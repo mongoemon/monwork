@@ -1,12 +1,13 @@
 import { state } from './state.js';
 import { i18n, detectLang } from './i18n.js';
 import { initTheme } from './theme.js';
-import { initNav } from './nav.js';
+import { initNav, applySubSectionConfig } from './nav.js';
 import { loadAll } from './data-loader.js';
 import { loadLastUpdated, renderProfile, renderNavGuide, renderLastUpdated, renderExperience } from './about.js';
 import { renderRecentProjects, renderProjects, renderCategoryTabLabels, renderProjectInfoPopup, initProjectInfoPopup } from './projects.js';
 import { renderPlayground } from './playground.js';
 import { renderSkills, renderTools } from './skills.js';
+import { initCustomPages, applyCustomPageLang } from './custom-pages.js';
 
 function applyLang(lang) {
     state.lang = lang;
@@ -39,6 +40,7 @@ function applyLang(lang) {
     if (state.projects.all.length > 0)  { renderRecentProjects(); renderProjects(); }
     if (state.playground.all.length > 0)  renderPlayground();
     renderProjectInfoPopup();
+    applyCustomPageLang();
 }
 
 function initLang() {
@@ -56,11 +58,19 @@ function hideLoadingOverlay() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Inject custom page sections before nav init so routing works
+    initCustomPages(null);
+
     initTheme();
     initLang();
     initNav();
     renderNavGuide();
     initProjectInfoPopup();
-    loadAll().finally(hideLoadingOverlay);
+    applySubSectionConfig();
+
+    loadAll()
+        .then(workbook => { if (workbook) initCustomPages(workbook); })
+        .finally(hideLoadingOverlay);
+
     loadLastUpdated();
 });

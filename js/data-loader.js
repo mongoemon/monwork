@@ -81,4 +81,6 @@ export async function loadAll() {
     try { renderAwards(getSheetData(workbook, 'Awards')); }            catch (e) { console.error('Awards:', e); }
     try { renderSkills(getSheetData(workbook, 'Skills')); }            catch (e) { console.error('Skills:', e); }
     try { renderTools(getSheetData(workbook, 'Tools')); }              catch (e) { console.error('Tools:', e); }
+
+    return workbook;
 }

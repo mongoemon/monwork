@@ -7,8 +7,9 @@
 ```
 portfolio4/
 ├── index.html              # โครงสร้างหน้าเว็บ
+├── wizard.html             # UI สำหรับตั้งค่าเว็บ (เปิดใน browser, export config.js)
 ├── style.css               # สไตล์ทั้งหมด (ใช้ CSS custom properties สำหรับ dark mode)
-├── config.js               # ตั้งค่า page visibility, nav order, และ Clarity ID
+├── config.js               # ตั้งค่า page visibility, sub-sections, nav order, custom pages
 ├── data.js                 # mock data สำรอง (ใช้ถ้า data.xlsx โหลดไม่ได้)
 ├── data.xlsx               # แหล่งข้อมูลหลัก (ดูรายละเอียด sheet ด้านล่าง)
 ├── js/                     # ES modules (entry point: js/main.js)
@@ -23,6 +24,7 @@ portfolio4/
 │   ├── projects.js         # project list, search, category tabs, pagination
 │   ├── playground.js       # playground list (reuse buildProjectCard จาก projects.js)
 │   ├── skills.js           # render skills และ tools
+│   ├── custom-pages.js     # inject และ render custom pages จาก config
 │   └── data-loader.js      # โหลด data.xlsx และ fallback mock data
 ├── images/
 │   ├── manifest.json       # รายชื่อไฟล์รูปในแต่ละ folder (generate จาก script)
@@ -33,32 +35,73 @@ portfolio4/
 └── categorize-projects.js  # กำหนด Project_Category ให้โปรเจคทั้งหมด
 ```
 
-## config.js — จัดการ Pages และการตั้งค่า
+## Config Wizard — ตั้งค่าเว็บแบบ UI
 
-ไฟล์หลักสำหรับควบคุมว่าจะเปิด/ปิด section ไหน และลำดับที่แสดงใน nav bar
+วิธีง่ายที่สุดในการตั้งค่าคือใช้ Wizard:
+
+1. รัน local server แล้วเปิด `http://localhost:8080/wizard.html`
+2. ตั้งค่าตามขั้นตอน 6 ขั้น (ดูรายละเอียดด้านล่าง)
+3. คลิก **Download config.js**
+4. นำไฟล์ที่ได้ไปแทน `config.js` เดิมในโฟลเดอร์ portfolio4
+
+| ขั้น | หัวข้อ | รายละเอียด |
+|------|--------|------------|
+| 1 | Pages | เปิด/ปิด page แต่ละหน้า + ลาก reorder ลำดับใน nav |
+| 2 | Sub-sections | เลือก sub-section ที่ต้องการแสดงในแต่ละ page |
+| 3 | Xlsx Mapping | กำหนดว่าแต่ละ sub-section อ่านข้อมูลจาก sheet ชื่ออะไร |
+| 4 | Categories | เพิ่ม/ลบ/แก้ไข project category (EN + TH) |
+| 5 | Custom Pages | เพิ่มหน้าใหม่ที่ดึงข้อมูลจาก xlsx sheet ที่กำหนดเอง |
+| 6 | Export | ดาวน์โหลด `config.js` ที่พร้อมใช้งาน |
+
+---
+
+## config.js — ตั้งค่าด้วยมือ
+
+แก้ไขโดยตรงได้ถ้าไม่ต้องการใช้ wizard
 
 ```js
-const siteConfig = {
+var siteConfig = {
+    clarityId: 'YOUR_CLARITY_ID',    // Microsoft Clarity project ID (ใส่ '' เพื่อปิด)
+    staleWarningMonths: 6,           // เดือนที่ไม่มี push ก่อนจะแสดงคำเตือน (0 = ปิด)
+
     pages: {
-        about:    true,   // true = เปิด, false = ซ่อน
-        projects: true,
-        join:     true,
-        contact:  true,
+        home:       true,   // true = เปิด, false = ซ่อน
+        about:      true,
+        projects:   true,
+        playground: true,
+        join:       true,
+        contact:    false,
     },
 
-    // จำนวนเดือนที่ไม่มีการ push ก่อนจะแสดงข้อความแจ้งเตือนท้ายหน้าแรก
-    // ตั้งเป็น 0 เพื่อปิดการแจ้งเตือน
-    staleWarningMonths: 6,
+    // ลำดับ page ใน nav bar (ถ้าไม่กำหนดจะใช้ลำดับจาก pages object)
+    pageOrder: ['home', 'about', 'projects', 'playground', 'join', 'contact'],
+
+    // ควบคุม sub-section แต่ละ page (ถ้าไม่กำหนด = เปิดทั้งหมด)
+    subSections: {
+        about: {
+            experience:     true,
+            education:      true,
+            certifications: true,
+            awards:         true,
+            skills:         true,
+            tools:          true,
+        },
+        home: {
+            hero:           true,
+            recentProjects: true,
+            contactForm:    true,
+        },
+    },
+
+    // หน้าใหม่ที่สร้างจาก xlsx sheet (ดูหัวข้อ Custom Pages ด้านล่าง)
+    customPages: [],
 };
 ```
 
-**ลำดับของ key = ลำดับใน nav bar** — `home` ถูก pin ไว้หน้าสุดเสมอ ส่วน key ที่เหลือเรียงตามที่กำหนดในไฟล์
-
-เมื่อตั้งเป็น `false`:
+เมื่อตั้ง page เป็น `false`:
 - ลิงก์ใน nav หายไป
 - เข้า URL hash โดยตรง (เช่น `#about`) → redirect กลับ home อัตโนมัติ
 - `projects: false` → ซ่อน Recent Projects ในหน้าแรกด้วย
-- `contact: false` → ซ่อน nav link แต่ form ในหน้าแรกยังอยู่
 
 ## Sheets ใน data.xlsx
 
@@ -72,12 +115,38 @@ const siteConfig = {
 | Skills | Skill_Name, Level (1–5), Category (รองรับ `_TH` suffix) |
 | Project | Project name, Duration, Project URL, Project overview, Roles and Responsibility, Skills and Tools, Image_Folder, YouTube, Project_Category (รองรับ `_TH` suffix) |
 
+## Custom Pages — เพิ่มหน้าใหม่จาก xlsx
+
+เพิ่มหน้าใหม่ที่ดึงข้อมูลจาก sheet ใน `data.xlsx` ได้โดยไม่ต้องแก้ HTML:
+
+**ขั้นตอน:**
+1. เพิ่ม sheet ใหม่ใน `data.xlsx` (เช่น `Blog` มีคอลัมน์ `Title`, `Date`, `Summary`, `URL`)
+2. เพิ่ม entry ใน `customPages` ใน `config.js`:
+   ```js
+   customPages: [
+       {
+           id:        'blog',           // ใช้เป็น #hash URL และ id ของ section
+           label:     { en: 'Blog', th: 'บล็อก' },
+           xlsxSheet: 'Blog',           // ชื่อ sheet ใน data.xlsx
+           fields: {
+               title:       'Title',    // คอลัมน์ที่ใช้เป็นหัวข้อ card
+               date:        'Date',     // คอลัมน์วันที่ (optional)
+               description: 'Summary',  // คอลัมน์เนื้อหา (optional)
+               link:        'URL',      // คอลัมน์ลิงก์ (optional)
+           },
+       },
+   ],
+   ```
+3. เปิดเว็บใหม่ — หน้า Blog จะปรากฏใน nav และแสดง card จากข้อมูลใน sheet
+
 ## ฟีเจอร์
 
 - **SPA navigation** — สลับ section ด้วย hash routing ไม่โหลดหน้าใหม่
 - **Dark mode** — toggle ปุ่ม Dark/Light ในนาฟ ตรวจ system preference อัตโนมัติ บันทึกใน `localStorage`
 - **Bilingual (EN/TH)** — ตรวจ `navigator.language` อัตโนมัติ สลับด้วยปุ่ม EN/TH บันทึกใน `localStorage` รองรับ Experience, Skills, Tools, Projects, Profile
-- **Page config** — เปิด/ปิด section และจัดลำดับ nav ได้จาก `config.js` ไฟล์เดียว
+- **Config Wizard** — UI สำหรับตั้งค่าเว็บ เปิด/ปิด page, จัดลำดับ nav, ควบคุม sub-section, เพิ่ม custom page ไม่ต้องแก้ code
+- **Page config** — เปิด/ปิด section, จัดลำดับ nav, ซ่อน sub-section เฉพาะส่วน ได้จาก `config.js` ไฟล์เดียว
+- **Custom Pages** — เพิ่มหน้าใหม่จาก xlsx sheet ใดก็ได้ แสดงเป็น card list อัตโนมัติ
 - **Join QA Team** — หน้าสมัครร่วมทีม มี form เก็บชื่อ, ชื่อเล่น, วันเกิด, เบอร์โทร, ลิงค์, และความสนใจ
 - **Project categories** — แบ่งเป็น Software / Game / etc. มี tab filter และแสดงจำนวน
 - **Category badge** — แสดง badge สีใต้ชื่อโปรเจคเมื่ออยู่ tab "All"
