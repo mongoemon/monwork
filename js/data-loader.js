@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { renderProfile, renderExperience, renderEducation, renderCertifications, renderAwards } from './about.js';
+import { renderProfile, renderExperience, renderEducation, renderCertifications, renderAwards, renderNavLinks } from './about.js';
 import { renderRecentProjects, initCategoryTabs, updateTabCounts, initSearch, applyFilters } from './projects.js';
 import { initPlaygroundSearch, applyPlaygroundFilters } from './playground.js';
 import { renderSkills, renderTools } from './skills.js';
@@ -81,6 +81,14 @@ export async function loadAll() {
     try { renderAwards(getSheetData(workbook, 'Awards')); }            catch (e) { console.error('Awards:', e); }
     try { renderSkills(getSheetData(workbook, 'Skills')); }            catch (e) { console.error('Skills:', e); }
     try { renderTools(getSheetData(workbook, 'Tools')); }              catch (e) { console.error('Tools:', e); }
+
+    try {
+        const linksRows = getSheetData(workbook, 'Links');
+        const links = {};
+        linksRows.forEach(row => { if (row.Key) links[row.Key] = row.URL; });
+        state.links = links;
+        renderNavLinks(links);
+    } catch (e) { console.error('Links:', e); }
 
     return workbook;
 }

@@ -8,4 +8,5 @@ export const state = {
     lastPushed: null,
     skills: null,
     tools: null,
+    links: {},
 };

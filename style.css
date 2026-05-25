@@ -183,6 +183,26 @@ nav ul li a.nav-active {
 
 [data-theme="dark"] nav ul li a.nav-active { border-bottom-color: #fff; }
 
+.nav-social-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.nav-social-icon {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.7);
+    transition: color 0.2s, opacity 0.2s;
+    line-height: 0;
+}
+
+.nav-social-icon:hover { color: #fff; }
+
+[data-theme="dark"] .nav-social-icon         { color: #888; }
+[data-theme="dark"] .nav-social-icon:hover   { color: #ccc; }
+
 .lang-switch {
     display: flex;
     gap: 2px;
@@ -1520,6 +1540,10 @@ h2 {
     nav ul { gap: 1rem; }
 
     nav ul li a { font-size: 0.82rem; }
+
+    .nav-social-links { gap: 4px; }
+
+    .nav-social-icon svg { width: 16px; height: 16px; }
 
     .home-contact-card { padding: 1.25rem 1rem; }
 }
