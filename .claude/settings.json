@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "if [[ \"$FILE_PATH\" == *\"data.xlsx\" ]]; then python3 restore-excel-styling.py \"$FILE_PATH\" 2>/dev/null || true; fi",
+        "description": "Auto-restore Excel styling after data.xlsx edits"
+      }
+    ]
+  }
+}
