@@ -261,18 +261,26 @@ Port `8080` ถูกโปรแกรมอื่นใช้อยู่แ�
 
 ### ❌ รูปภาพไม่โหลด / manifest.json โหลดไม่เจอ
 
-`images/manifest.json` อาจจะยังไม่ถูกสร้าง หรือไม่อัพเดทหลังจากเพิ่มรูป
+`images/manifest.json` อาจจะยังไม่ถูกสร้าง หรือไม่อัพเดทหลังจากเพิ่มรูป หรือ **ไม่มี entry ใหม่ที่เพิ่มเข้ามา**
 
 **วิธีแก้:**
-```bash
-node generate-manifest.js
-```
-ถ้าไม่มี Node.js → สร้างไฟล์ `images/manifest.json` เองตาม format:
-```json
-{
-  "project-folder": ["001.png", "002.png", "logo.png"]
-}
-```
+
+1. **ถ้าเพิ่มโปรเจคใหม่:**
+   ```bash
+   node generate-manifest.js
+   ```
+
+2. **ถ้าเพิ่มรูปใน folder ที่มีอยู่แล้ว:**
+   - ตรวจสอบว่า `images/manifest.json` มี entry ของ folder นั้นหรือไม่
+   - ถ้าไม่มี → เพิ่มเข้าไป:
+   ```json
+   {
+     "project-folder": ["001.png", "002.png", "logo.png"]
+   }
+   ```
+   - รีเฟรช browser
+
+3. **ถ้าไม่มี Node.js** → สร้างไฟล์ `images/manifest.json` เองตาม format ด้านบน
 
 ---
 
@@ -298,6 +306,27 @@ Formspree อาจมี limit (ฟรี 50 ส่ง/เดือน) หร�
 
 ---
 
+### ❌ ภาพโปรเจคเฉพาะที่ไม่แสดง (เช่น Asia Cement)
+
+โปรเจคนั้นมีรูปใน folder `images/<folder>/` แต่ไม่แสดงบนเว็บ
+
+**วิธีแก้:**
+1. เปิดไฟล์ `images/manifest.json`
+2. ตรวจสอบว่ามี entry ของ folder นั้นหรือไม่
+   ```json
+   {
+     "asiacement": ["logo.jpg"],  // ← ต้องมี entry แบบนี้
+     "another-project": [...]
+   }
+   ```
+3. ถ้าไม่มี → เพิ่มเข้าไป:
+   ```json
+   "asiacement": ["logo.jpg", "001.png", "002.png"],
+   ```
+4. เซฟและรีเฟรช browser
+
+---
+
 ### ❌ Microsoft Clarity ไม่ทำงาน / ไม่มีข้อมูล
 
 **วิธีแก้:**
@@ -307,6 +336,33 @@ Formspree อาจมี limit (ฟรี 50 ส่ง/เดือน) หร�
 - เช็ค browser console ว่ามี error `clarity is not defined` หรือไม่
 
 ## อัพเดทข้อมูล
+
+### 🎨 Excel Styling & Column Width Management
+
+ระบบนี้จะ **รักษา styling (สี, ฟอนต์, ความกว้างคอลัมน์) ให้เหมือนเดิม** ทุกครั้งที่แก้ไข `data.xlsx` ผ่าน Claude
+
+**ฟีเจอร์:**
+- ✅ รักษา column widths ทั้งหมด
+- ✅ รักษา header colors และ formatting
+- ✅ Auto-restore styling หลังแก้ไข
+- ✅ ไม่มีการสูญหายข้อมูล styling
+
+**Files เกี่ยวข้อง:**
+- `preserve-excel-styling.py` — บันทึก styling
+- `restore-excel-styling.py` — คืนค่า styling
+- `.excel-styling.json` — ข้อมูล styling backup
+- `EXCEL-STYLING-GUIDE.md` — เอกสารฉบับเต็ม
+
+**ตัวอย่างการใช้:**
+
+เมื่อแก้ไข `data.xlsx` ผ่าน Claude → styling จะถูก restore อัตโnoมัติผ่าน hook
+
+ถ้าเปลี่ยน schema (เพิ่ม/ลบ columns) ให้รัน:
+```bash
+python3 preserve-excel-styling.py data.xlsx
+```
+
+---
 
 ### เพิ่ม/แก้ข้อมูลทั่วไป
 แก้ใน `data.xlsx` โดยตรง แล้ว refresh browser
