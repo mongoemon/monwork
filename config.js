@@ -11,7 +11,7 @@ var siteConfig = {
         about: true,
         projects: true,
         playground: true,
-        join: true,
+        join: false,
         contact: false,
     },
 
