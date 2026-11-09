@@ -12,6 +12,29 @@ const FILE = path.join(__dirname, 'data.xlsx');
 
 const NEW_PROJECTS = [
     {
+        'Project name':     'Zcreenshot — Screenshot Stitch & Editor',
+        'Project name_TH':  'Zcreenshot — โปรแกรมต่อและแก้ไขภาพหน้าจอ',
+        'Duration':         '2026',
+        'Project URL':      'https://zscreen.pages.dev/',
+        'Project overview':
+            'A privacy-first image editor for stitching screenshots into a single picture. ' +
+            'Paste or drag in images, arrange and annotate them (pen, arrows, shapes, text, numbered labels, censor), ' +
+            'then export as PNG. Also records the screen to GIF/MP4/WebM, captures scrolling pages, and runs Thai/English OCR locally. ' +
+            'Available as a web app (PWA, works offline) and an Electron desktop app. Nothing leaves the device; ' +
+            'a strict Content-Security-Policy is backed by automated tests. Source: https://github.com/mongoemon/zscreen',
+        'Project overview_TH':
+            'โปรแกรมแก้ไขภาพที่เน้นความเป็นส่วนตัว ใช้ต่อภาพหน้าจอหลายภาพเป็นภาพเดียว ' +
+            'วางหรือลากภาพเข้ามา จัดวาง แล้วใส่ annotation (ปากกา ลูกศร รูปทรง ข้อความ เลขลำดับ ปิดบังข้อมูล) ก่อนบันทึกเป็น PNG ' +
+            'บันทึกหน้าจอเป็น GIF/MP4/WebM ได้ แคปเจอร์หน้าเว็บแบบเลื่อนยาว และทำ OCR ภาษาไทย/อังกฤษในเครื่อง ' +
+            'ใช้ได้ทั้งเว็บ (PWA ใช้ออฟไลน์ได้) และแอป desktop แบบ Electron ข้อมูลไม่ถูกส่งออกจากเครื่อง ' +
+            'และมีการตั้ง Content-Security-Policy พร้อมชุดทดสอบอัตโนมัติ ซอร์สโค้ด: https://github.com/mongoemon/zscreen',
+        'Skills and Tools': 'JavaScript, Electron, PWA, WebCodecs, WebAssembly, Tesseract.js, node:test, GitHub Actions',
+    },
+];
+
+// Previously added entries (already in data.xlsx — do not re-run, it would duplicate rows).
+const PREVIOUSLY_ADDED = [
+    {
         'Project name':     'Local API Test Server',
         'Project name_TH':  'เซิร์ฟเวอร์ทดสอบ API',
         'Duration':         '2024',

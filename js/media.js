@@ -53,6 +53,8 @@ export function buildProjectMedia(folder, youtubeField) {
     if (logoSrc) {
         logoEl = document.createElement('img');
         logoEl.src = logoSrc;
+        logoEl.loading = 'lazy';
+        logoEl.decoding = 'async';
         logoEl.className = 'project-logo';
         logoEl.alt = `${folder} logo`;
         logoEl.title = 'Click to enlarge';
@@ -109,6 +111,8 @@ export function createGallery(items, altPrefix) {
         if (item.type === 'image') {
             const img = document.createElement('img');
             img.src = item.src;
+            img.loading = 'lazy';
+            img.decoding = 'async';
             img.className = 'gallery-img';
             img.alt = altPrefix;
             img.title = 'Click to enlarge';

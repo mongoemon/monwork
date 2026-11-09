@@ -10,6 +10,43 @@ const NAV_GUIDE_PAGES = [
     { id: 'contact',    icon: '✉️', key: 'guide_contact'   },
 ];
 
+const SEO_DESCRIPTION_MAX = 160;
+
+function setMeta(selector, value) {
+    const el = document.head.querySelector(selector);
+    if (el && value) el.setAttribute('content', value);
+}
+
+/** Keep title, description, Open Graph and JSON-LD in sync with profile data. */
+function updateSeoMeta({ name, title, description }) {
+    if (!name) return;
+    const pageTitle = title ? `${name} — ${title}` : `${name} — Portfolio`;
+    const summary = (description || '').replace(/\s+/g, ' ').trim().slice(0, SEO_DESCRIPTION_MAX);
+
+    document.title = pageTitle;
+    setMeta('meta[name="description"]', summary);
+    setMeta('meta[property="og:title"]', pageTitle);
+    setMeta('meta[property="og:description"]', summary);
+    setMeta('meta[name="twitter:title"]', pageTitle);
+    setMeta('meta[name="twitter:description"]', summary);
+
+    const ldEl = document.getElementById('ld-json');
+    if (!ldEl) return;
+    try {
+        const ld = JSON.parse(ldEl.textContent);
+        const graph = ld['@graph'].map(node => {
+            if (node['@type'] === 'Person') {
+                return { ...node, name, ...(title && { jobTitle: title }), ...(summary && { description: summary }) };
+            }
+            if (node['@type'] === 'WebSite') return { ...node, name: pageTitle };
+            return node;
+        });
+        ldEl.textContent = JSON.stringify({ ...ld, '@graph': graph });
+    } catch (err) {
+        console.warn('SEO JSON-LD update skipped:', err);
+    }
+}
+
 export function renderProfile(profile) {
     state.profile = profile;
 
@@ -27,8 +64,16 @@ export function renderProfile(profile) {
         normalizeLines(pickLang(profile, 'Intro') || pickLang(profile, 'Bio') || '');
 
     const photo = document.getElementById('home-photo');
-    if (profile.Photo_URL) photo.src = profile.Photo_URL;
-    else photo.style.display = 'none';
+    if (profile.Photo_URL) {
+        photo.src = profile.Photo_URL;
+        photo.alt = title ? `${name}, ${title}` : name;
+    } else photo.style.display = 'none';
+
+    updateSeoMeta({
+        name,
+        title,
+        description: normalizeLines(pickLang(profile, 'Intro') || pickLang(profile, 'Bio') || ''),
+    });
 
     document.getElementById('about-bio').textContent =
         normalizeLines(pickLang(profile, 'Bio') || pickLang(profile, 'Intro') || '');

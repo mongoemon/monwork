@@ -82,7 +82,7 @@ export function renderRecentProjects() {
         const card = document.createElement('div');
         card.className = 'recent-card';
         card.innerHTML = `
-            ${logoSrc ? `<img class="recent-logo" src="${escapeHtml(logoSrc)}" alt="${escapeHtml(pickLang(project, 'Project name'))} logo">` : ''}
+            ${logoSrc ? `<img class="recent-logo" loading="lazy" decoding="async" src="${escapeHtml(logoSrc)}" alt="${escapeHtml(pickLang(project, 'Project name'))} logo">` : ''}
             <div class="recent-info">
                 <h4>${escapeHtml(pickLang(project, 'Project name') || '')}</h4>
                 ${project.Duration ? `<p class="recent-duration">${escapeHtml(project.Duration)}</p>` : ''}

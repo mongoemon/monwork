@@ -1547,3 +1547,10 @@ h2 {
 
     .home-contact-card { padding: 1.25rem 1rem; }
 }
+
+.site-version {
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    opacity: 0.5;
+    letter-spacing: 0.05em;
+}
