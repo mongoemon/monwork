@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: monwork
+    runtime: static
+    buildCommand: echo "static site - no build"
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
