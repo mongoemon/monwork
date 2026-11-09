@@ -3,7 +3,7 @@ services:
     name: monwork
     runtime: static
     buildCommand: echo "static site - no build"
-    staticPublishPath: .
+    staticPublishPath: ./public
     pullRequestPreviewsEnabled: false
     headers:
       - path: /*

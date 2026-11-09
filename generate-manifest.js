@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const IMAGES_DIR = path.join(__dirname, 'images');
+const IMAGES_DIR = path.join(__dirname, 'public', 'images');
 const IMAGE_EXTENSIONS = /\.(jpg|jpeg|png|gif|webp)$/i;
 
 function naturalSort(a, b) {
