@@ -46,9 +46,9 @@ jobs:
           curl --fail --silent --show-error -X POST "$RENDER_DEPLOY_HOOK_URL"
       - name: Smoke test live site (waits for new deploy)
         env:
-          SMOKE_BASE_URL: ${{ vars.RENDER_SITE_URL }}
+          SMOKE_BASE_URL: ${{ secrets.RENDER_SITE_URL || vars.RENDER_SITE_URL }}
         run: |
           if [ -z "$SMOKE_BASE_URL" ]; then
-            echo "::error::Repository variable RENDER_SITE_URL is not set"; exit 1
+            echo "::error::RENDER_SITE_URL is not set (secret or variable)"; exit 1
           fi
           node scripts/smoke.js --wait
