@@ -5,6 +5,7 @@ services:
     buildCommand: echo "static site - no build"
     staticPublishPath: ./public
     pullRequestPreviewsEnabled: false
+    autoDeployTrigger: "off" # deploy is triggered by GitHub Actions (.github/workflows/deploy.yml)
     headers:
       - path: /*
         name: X-Content-Type-Options

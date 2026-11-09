@@ -62,7 +62,7 @@ function writeCells(ws, rowIndex, fields) {
 
 // ── Main ──────────────────────────────────────────────────
 
-const filePath = path.join(__dirname, 'data.xlsx');
+const filePath = path.join(__dirname, 'public', 'data.xlsx');
 const wb = XLSX.readFile(filePath);
 const ws = wb.Sheets['Project'];
 const range = XLSX.utils.decode_range(ws['!ref']);

@@ -15,7 +15,7 @@
 const ExcelJS = require('exceljs');
 const path = require('path');
 
-const FILE = path.join(__dirname, 'data.xlsx');
+const FILE = path.join(__dirname, 'public', 'data.xlsx');
 
 // ── Styles ────────────────────────────────────────────────────────────────────
 
@@ -178,7 +178,7 @@ async function run() {
         if (e.code === 'EBUSY' || e.code === 'EPERM') {
             console.log(`\n✓ ${totalFixed} cell(s) normalized`);
             console.log(`⚠  data.xlsx is open in Excel — close Excel, then run:`);
-            console.log(`   copy /Y data.tmp.xlsx data.xlsx  (Windows)`);
+            console.log(`   copy /Y publicdata.tmp.xlsx publicdata.xlsx  (Windows)`);
             console.log(`   # or just rename data.tmp.xlsx to data.xlsx in File Explorer`);
         } else {
             fs.unlinkSync(TEMP);

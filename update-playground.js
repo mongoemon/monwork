@@ -8,7 +8,7 @@
 const ExcelJS = require('exceljs');
 const path    = require('path');
 
-const FILE = path.join(__dirname, 'data.xlsx');
+const FILE = path.join(__dirname, 'public', 'data.xlsx');
 
 const NEW_PROJECTS = [
     {

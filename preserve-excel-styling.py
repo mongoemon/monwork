@@ -92,5 +92,5 @@ def save_styling(excel_path, output_path=None):
 
 if __name__ == '__main__':
     import sys
-    excel_file = sys.argv[1] if len(sys.argv) > 1 else 'data.xlsx'
+    excel_file = sys.argv[1] if len(sys.argv) > 1 else 'public/data.xlsx'
     save_styling(excel_file)

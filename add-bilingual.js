@@ -8,7 +8,7 @@
 const XLSX = require('./node_modules/xlsx');
 const path = require('path');
 
-const filePath = path.join(__dirname, 'data.xlsx');
+const filePath = path.join(__dirname, 'public', 'data.xlsx');
 const wb = XLSX.readFile(filePath);
 
 // ── Safe cell-level writer ────────────────────────────────

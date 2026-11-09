@@ -52,7 +52,7 @@ python3 restore-excel-styling.py data.xlsx
    ```
 3. **Commit files**:
    ```bash
-   git add data.xlsx .excel-styling.json
+   git add public/data.xlsx .excel-styling.json
    git commit -m "Update data.xlsx structure and styling"
    ```
 

@@ -17,7 +17,7 @@
 const XLSX = require('xlsx');
 const path = require('path');
 
-const FILE = path.join(__dirname, 'data.xlsx');
+const FILE = path.join(__dirname, 'public', 'data.xlsx');
 
 function normalizeCell(val) {
     if (typeof val !== 'string') return val;

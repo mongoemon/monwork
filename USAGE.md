@@ -68,7 +68,7 @@ portfolio4/
 ├── style.css                 ← All visual styles. Edit here to change colours, layout, fonts.
 ├── config.js                 ← Site configuration: pages, sub-sections, categories, custom pages.
 ├── data.js                   ← Fallback mock data used when data.xlsx fails to load.
-├── data.xlsx                 ← PRIMARY data source. Edit this for all content changes.
+├── public/data.xlsx              ← PRIMARY data source. Edit this for all content changes.
 │
 ├── js/                       ← ES module source (loaded by index.html as type="module")
 │   ├── main.js               ← Entry point — initialises everything.
@@ -154,7 +154,7 @@ node style-xlsx.js
 node generate-manifest.js
 
 # 4. Stage and commit
-git add data.xlsx images/manifest.json
+git add public/data.xlsx images/manifest.json
 git commit -m "Update content"
 git push
 ```
@@ -699,7 +699,7 @@ Shows three groups:
 
 Stage a specific file:
 ```bash
-git add data.xlsx
+git add public/data.xlsx
 ```
 
 Stage everything in a folder (new files + changes + deletions):
@@ -709,7 +709,7 @@ git add -A images/
 
 Stage multiple specific files at once:
 ```bash
-git add data.xlsx images/manifest.json script.js
+git add public/data.xlsx images/manifest.json script.js
 ```
 
 > **Tip:** Never use `git add .` or `git add -A` at the root — it may pick up temp files like `~$data.xlsx` (Excel lock file) by accident.
@@ -766,7 +766,7 @@ node format-xlsx.js          # fix line breaks in data.xlsx
 node generate-manifest.js    # update images/manifest.json after adding/removing images
 
 # 3. Stage your changes
-git add data.xlsx images/manifest.json
+git add public/data.xlsx images/manifest.json
 
 # 4. Stage any new or deleted images
 git add -A images/
